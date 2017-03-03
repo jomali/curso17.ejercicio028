@@ -8,39 +8,43 @@ import org.springframework.stereotype.Service;
 import es.cic.curso.curso17.ejercicio028.modelo.Medicamento;
 
 @Service
-public class MedicamentoDTOTraductor {
-	
-	public MedicamentoDTO entidad2dto(Medicamento medicamento) {
+public class MedicamentoDTOTraductor implements Traductor<Medicamento, MedicamentoDTO> {
+
+	@Override
+	public MedicamentoDTO traduceADTO(Medicamento entidad) {
 		MedicamentoDTO resultado = new MedicamentoDTO();
-		resultado.setId(medicamento.getId());
-		resultado.setTipo(medicamento.getTipo());
-		resultado.setNombreTipo(medicamento.getTipo().getNombre());
-		resultado.setNombre(medicamento.getNombre());
-		resultado.setDescripcion(medicamento.getDescripcion());
-		return resultado;
-	}
-	
-	public Medicamento dto2entidad(MedicamentoDTO medicamentoDTO) {
-		Medicamento resultado = new Medicamento();
-		resultado.setId(medicamentoDTO.getId());
-		resultado.setTipo(medicamentoDTO.getTipo());
-		resultado.setNombre(medicamentoDTO.getNombre());
-		resultado.setDescripcion(medicamentoDTO.getDescripcion());
+		resultado.setId(entidad.getId());
+		resultado.setTipo(entidad.getTipo());
+		resultado.setNombreTipo(entidad.getTipo() == null ? null : entidad.getTipo().getNombre());
+		resultado.setNombre(entidad.getNombre());
+		resultado.setDescripcion(entidad.getDescripcion());
 		return resultado;
 	}
 
-	public List<MedicamentoDTO> entidad2dto(List<Medicamento>  medicamentos) {
+	@Override
+	public Medicamento traduceAEntidad(MedicamentoDTO dto) {
+		Medicamento resultado = new Medicamento();
+		resultado.setId(dto.getId());
+		resultado.setTipo(dto.getTipo());
+		resultado.setNombre(dto.getNombre());
+		resultado.setDescripcion(dto.getDescripcion());
+		return resultado;
+	}
+
+	@Override
+	public List<MedicamentoDTO> traduceAListaDTOs(List<Medicamento> entidades) {
 		List<MedicamentoDTO> resultado = new ArrayList<>();
-		for (Medicamento medicamento : medicamentos) {
-			resultado.add(entidad2dto(medicamento));
+		for (Medicamento medicamento : entidades) {
+			resultado.add(traduceADTO(medicamento));
 		}
 		return resultado;
 	}
-	
-	public List<Medicamento> dto2entidad(List<MedicamentoDTO> medicamentosDTO) {
+
+	@Override
+	public List<Medicamento> traduceAListaEntidades(List<MedicamentoDTO> dtos) {
 		List<Medicamento> resultado = new ArrayList<>();
-		for (MedicamentoDTO dto : medicamentosDTO) {
-			resultado.add(dto2entidad(dto));
+		for (MedicamentoDTO dto : dtos) {
+			resultado.add(traduceAEntidad(dto));
 		}
 		return resultado;
 	}

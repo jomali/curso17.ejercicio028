@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "TIPO_MEDICAMENTO")
-public class TipoMedicamento implements Identificable<Long> {
+public class TipoMedicamento implements Cloneable, Identificable<Long> {
 	private static final long serialVersionUID = -2731182807863562201L;
 
 	/** Identificador. Rango de valores: <code>[-2^63, 2^63)</code>. */
@@ -48,7 +48,8 @@ public class TipoMedicamento implements Identificable<Long> {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	@Override
 	public void setId(Long id) {
@@ -56,14 +57,16 @@ public class TipoMedicamento implements Identificable<Long> {
 	}
 
 	/**
-	 * @param nombre the nombre to set
+	 * @param nombre
+	 *            the nombre to set
 	 */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
 
 	/**
-	 * @param descripcion the descripcion to set
+	 * @param descripcion
+	 *            the descripcion to set
 	 */
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
@@ -98,5 +101,14 @@ public class TipoMedicamento implements Identificable<Long> {
 	public String toString() {
 		return "TipoMedicamento [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + "]";
 	}
-	
+
+	@Override
+	public TipoMedicamento clone() {
+		TipoMedicamento clon = new TipoMedicamento();
+		clon.id = id;
+		clon.nombre = nombre;
+		clon.descripcion = descripcion;
+		return clon;
+	}
+
 }

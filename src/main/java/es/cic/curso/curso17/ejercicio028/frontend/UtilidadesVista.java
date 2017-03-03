@@ -1,4 +1,4 @@
-package es.cic.curso.curso17.ejercicio028.vista;
+package es.cic.curso.curso17.ejercicio028.frontend;
 
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -8,7 +8,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 
 public class UtilidadesVista {
-	
+
 	public static Window creaVentanaModal(String mensaje) {
 		Window resultado = new Window();
 		resultado.setWidth(500.0F, Unit.PIXELS);
@@ -21,7 +21,7 @@ public class UtilidadesVista {
 		label.setContentMode(ContentMode.HTML);
 
 		Button botonAceptar = new Button("Aceptar");
-		botonAceptar.addClickListener(e -> resultado.close() );
+		botonAceptar.addClickListener(e -> resultado.close());
 
 		final FormLayout content = new FormLayout();
 		content.setMargin(true);

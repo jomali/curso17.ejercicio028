@@ -8,36 +8,40 @@ import org.springframework.stereotype.Service;
 import es.cic.curso.curso17.ejercicio028.modelo.Enfermedad;
 
 @Service
-public class EnfermedadDTOTraductor {
-	
-	public EnfermedadDTO entidad2dto(Enfermedad enfermedad) {
+public class EnfermedadDTOTraductor implements Traductor<Enfermedad, EnfermedadDTO> {
+
+	@Override
+	public EnfermedadDTO traduceADTO(Enfermedad entidad) {
 		EnfermedadDTO resultado = new EnfermedadDTO();
-		resultado.setId(enfermedad.getId());
-		resultado.setNombre(enfermedad.getNombre());
-		resultado.setDescripcion(enfermedad.getDescripcion());
+		resultado.setId(entidad.getId());
+		resultado.setNombre(entidad.getNombre());
+		resultado.setDescripcion(entidad.getDescripcion());
 		return resultado;
 	}
-	
-	public Enfermedad dto2entidad(EnfermedadDTO enfermedadDTO) {
+
+	@Override
+	public Enfermedad traduceAEntidad(EnfermedadDTO dto) {
 		Enfermedad resultado = new Enfermedad();
-		resultado.setId(enfermedadDTO.getId());
-		resultado.setNombre(enfermedadDTO.getNombre());
-		resultado.setDescripcion(enfermedadDTO.getDescripcion());
+		resultado.setId(dto.getId());
+		resultado.setNombre(dto.getNombre());
+		resultado.setDescripcion(dto.getDescripcion());
 		return resultado;
 	}
-	
-	public List<EnfermedadDTO> entidad2dto(List<Enfermedad> enfermedades) {
+
+	@Override
+	public List<EnfermedadDTO> traduceAListaDTOs(List<Enfermedad> entidades) {
 		List<EnfermedadDTO> resultado = new ArrayList<>();
-		for (Enfermedad enfermedad : enfermedades) {
-			resultado.add(entidad2dto(enfermedad));
+		for (Enfermedad enfermedad : entidades) {
+			resultado.add(traduceADTO(enfermedad));
 		}
 		return resultado;
 	}
-	
-	public List<Enfermedad> dto2entidad(List<EnfermedadDTO> enfermedadesDTO) {
+
+	@Override
+	public List<Enfermedad> traduceAListaEntidades(List<EnfermedadDTO> dtos) {
 		List<Enfermedad> resultado = new ArrayList<>();
-		for (EnfermedadDTO dto : enfermedadesDTO) {
-			resultado.add(dto2entidad(dto));
+		for (EnfermedadDTO dto : dtos) {
+			resultado.add(traduceAEntidad(dto));
 		}
 		return resultado;
 	}

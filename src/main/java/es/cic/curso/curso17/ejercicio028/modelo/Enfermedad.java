@@ -9,14 +9,14 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "ENFERMEDAD")
-public class Enfermedad implements Identificable<Long> {
+public class Enfermedad implements Cloneable, Identificable<Long> {
 	private static final long serialVersionUID = -4853042887127874371L;
 
 	/** Identificador. Rango de valores: <code>[-2^63, 2^63)</code>. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
+
 	/** Nombre de la enfermedad. */
 	@Column(name = "nombre")
 	private String nombre;
@@ -48,7 +48,8 @@ public class Enfermedad implements Identificable<Long> {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	@Override
 	public void setId(Long id) {
@@ -56,14 +57,16 @@ public class Enfermedad implements Identificable<Long> {
 	}
 
 	/**
-	 * @param nombre the nombre to set
+	 * @param nombre
+	 *            the nombre to set
 	 */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
 
 	/**
-	 * @param descripcion the descripcion to set
+	 * @param descripcion
+	 *            the descripcion to set
 	 */
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
@@ -104,5 +107,14 @@ public class Enfermedad implements Identificable<Long> {
 	public String toString() {
 		return "Enfermedad [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + "]";
 	}
-	
+
+	@Override
+	public Enfermedad clone() {
+		Enfermedad clon = new Enfermedad();
+		clon.id = id;
+		clon.nombre = nombre;
+		clon.descripcion = descripcion;
+		return clon;
+	}
+
 }

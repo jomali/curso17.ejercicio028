@@ -1,4 +1,4 @@
-package es.cic.curso.curso17.ejercicio028.vista.administracion;
+package es.cic.curso.curso17.ejercicio028.frontend.administracion;
 
 import java.util.Collection;
 
@@ -6,6 +6,7 @@ import org.springframework.web.context.ContextLoader;
 
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.Page;
+import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
@@ -13,31 +14,32 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Notification.Type;
 
 import es.cic.curso.curso17.ejercicio028.dto.EnfermedadDTO;
-import es.cic.curso.curso17.ejercicio028.servicio.ServicioEnfermedad;
-import es.cic.curso.curso17.ejercicio028.vista.VistaAdministracion;
+import es.cic.curso.curso17.ejercicio028.frontend.VistaAdministracion;
+import es.cic.curso.curso17.ejercicio028.modelo.TipoMedicamento;
+import es.cic.curso.curso17.ejercicio028.servicio.ServicioTipoMedicamento;
 
-public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
-	private static final long serialVersionUID = 6467264543844871753L;
+public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
+	private static final long serialVersionUID = 514378371321635909L;
 
-	private ServicioEnfermedad servicioEnfermedad;
+	/** Lógica de negocio con acceso a BB.DD.: tipos de medicamento */
+	private ServicioTipoMedicamento servicioTipoMedicamento;
 
 	private TextField textFieldNombre;
 
 	private TextArea textAreaDescripcion;
 
-	public LayoutEnfermedades(VistaAdministracion padre) {
-		super(padre);
-		servicioEnfermedad = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioEnfermedad.class);
-	}
+	private Button botonAcepta;
 
-	// /////////////////////////////////////////////////////////////////////////
-	// Inicialización de componentes gráficos:
+	public LayoutTiposMedicamento(VistaAdministracion padre) {
+		super(padre);
+		servicioTipoMedicamento = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioTipoMedicamento.class);
+	}
 
 	@Override
 	protected Grid generaGrid() {
@@ -45,7 +47,7 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		grid.setColumns("nombre");
 		grid.addSelectionListener(e -> {
 			if (!e.getSelected().isEmpty()) {
-				elementoSeleccionado = (EnfermedadDTO) e.getSelected().iterator().next();
+				elementoSeleccionado = (TipoMedicamento) e.getSelected().iterator().next();
 				botonAgrega.setEnabled(false);
 				botonEdita.setEnabled(true);
 				botonElimina.setEnabled(true);
@@ -71,37 +73,39 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		textFieldNombre.setSizeFull();
 		textFieldNombre.setInputPrompt("Nombre");
 		textFieldNombre.setRequired(true);
+		textFieldNombre.addTextChangeListener(e -> botonAcepta.setEnabled(true));
 
 		textAreaDescripcion = new TextArea("Descripción:");
 		textAreaDescripcion.setRows(5);
 		textAreaDescripcion.setSizeFull();
 		textAreaDescripcion.setInputPrompt("Descripción");
+		textAreaDescripcion.addTextChangeListener(e -> botonAcepta.setEnabled(true));
 
-		Button botonAcepta = new Button("Aceptar");
+		botonAcepta = new Button("Aceptar");
 		botonAcepta.addClickListener(e -> {
-			EnfermedadDTO nuevaEnfermedad = new EnfermedadDTO();
-			nuevaEnfermedad.setNombre(textFieldNombre.getValue());
-			nuevaEnfermedad.setDescripcion(textAreaDescripcion.getValue());
+			TipoMedicamento nuevoTipo = new TipoMedicamento();
+			nuevoTipo.setNombre(textFieldNombre.getValue());
+			nuevoTipo.setDescripcion(textAreaDescripcion.getValue());
 			activaFormulario(false);
 			// Agregar elemento:
 			if (elementoSeleccionado == null) {
-				servicioEnfermedad.agregaEnfermedad(nuevaEnfermedad);
+				servicioTipoMedicamento.agregaTipoMedicamento(nuevoTipo);
 				cargaGrid();
 				botonAgrega.setEnabled(true);
 				botonEdita.setEnabled(false);
 				botonElimina.setEnabled(false);
-				new Notification("Entrada añadida: <strong>\"" + nuevaEnfermedad.getNombre() + "\"</strong>", "",
+				new Notification("Entrada añadida: <strong>\"" + nuevoTipo.getNombre() + "\"</strong>", "",
 						Type.TRAY_NOTIFICATION, true).show(Page.getCurrent());
 			}
 			// Editar elemento:
 			else {
-				servicioEnfermedad.modificaEnfermedad(elementoSeleccionado.getId(), nuevaEnfermedad);
+				servicioTipoMedicamento.modificaTipoMedicamento(elementoSeleccionado.getId(), nuevoTipo);
 				cargaGrid();
 				elementoSeleccionado = null;
-				botonAgrega.setEnabled(true); // botonAgrega.setEnabled(false);
-				botonEdita.setEnabled(false); // botonEdita.setEnabled(true);
-				botonElimina.setEnabled(false); // botonElimina.setEnabled(true);
-				new Notification("Entrada modificada: <strong>\"" + nuevaEnfermedad.getNombre() + "\"</strong>", "",
+				botonAgrega.setEnabled(true);
+				botonEdita.setEnabled(false);
+				botonElimina.setEnabled(false);
+				new Notification("Entrada modificada: <strong>\"" + nuevoTipo.getNombre() + "\"</strong>", "",
 						Type.TRAY_NOTIFICATION, true).show(Page.getCurrent());
 			}
 			cargaFormulario(elementoSeleccionado);
@@ -124,7 +128,7 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 	}
 
 	@Override
-	protected void cargaFormulario(EnfermedadDTO elemento) {
+	protected void cargaFormulario(TipoMedicamento elemento) {
 		if (elemento == null) {
 			textFieldNombre.clear();
 			textAreaDescripcion.clear();
@@ -132,6 +136,7 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 			String descripcion = elemento.getDescripcion();
 			textFieldNombre.setValue(elemento.getNombre());
 			textAreaDescripcion.setValue(descripcion == null ? "" : descripcion);
+			botonAcepta.setEnabled(false);
 		}
 	}
 
@@ -145,12 +150,12 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		resultado.setDraggable(false);
 
 		Label label = new Label(
-				"¿Está seguro de que desea borrar: <strong>\"" + elementoSeleccionado.getNombre() + "\"</strong>?");
+				"¿Está seguro de que desea borrar siguiente elemento:<br><strong>\"" + elementoSeleccionado.getNombre() + "\"</strong>?");
 		label.setContentMode(ContentMode.HTML);
 
 		Button botonAceptar = new Button("Aceptar");
 		botonAceptar.addClickListener(e -> {
-			servicioEnfermedad.eliminaEnfermedad(elementoSeleccionado.getId());
+			servicioTipoMedicamento.eliminaTipoMedicamento(elementoSeleccionado.getId());
 			cargaGrid();
 			resultado.close();
 		});
@@ -174,8 +179,9 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 
 	@Override
 	public void cargaGrid() {
-		Collection<EnfermedadDTO> enfermedades = servicioEnfermedad.listaEnfermedades();
-		grid.setContainerDataSource(new BeanItemContainer<>(EnfermedadDTO.class, enfermedades));
+		Collection<TipoMedicamento> elementos = servicioTipoMedicamento.listaTiposMedicamento();
+		grid.setContainerDataSource(new BeanItemContainer<>(TipoMedicamento.class, elementos));
+
 	}
 
 }

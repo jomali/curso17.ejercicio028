@@ -1,4 +1,4 @@
-package es.cic.curso.curso17.ejercicio028.vista;
+package es.cic.curso.curso17.ejercicio028.frontend;
 
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;

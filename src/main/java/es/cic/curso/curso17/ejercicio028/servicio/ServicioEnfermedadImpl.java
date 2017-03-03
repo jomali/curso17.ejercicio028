@@ -14,18 +14,18 @@ import es.cic.curso.curso17.ejercicio028.repositorio.RepositorioEnfermedad;
 @Service
 @Transactional
 public class ServicioEnfermedadImpl implements ServicioEnfermedad {
-	
+
 	private static final String ERROR_ENFERMEDAD_ID = "No existe ninguna enfermedad en BB.DD. con ese ID";
 
 	@Autowired
 	private RepositorioEnfermedad repositorioEnfermedad;
-	
+
 	@Autowired
 	private EnfermedadDTOTraductor traductor;
 
 	@Override
 	public void agregaEnfermedad(EnfermedadDTO enfermedad) {
-		repositorioEnfermedad.create(traductor.dto2entidad(enfermedad));
+		repositorioEnfermedad.create(traductor.traduceAEntidad(enfermedad));
 	}
 
 	@Override
@@ -34,17 +34,17 @@ public class ServicioEnfermedadImpl implements ServicioEnfermedad {
 		if (enfermedad == null) {
 			throw new IllegalArgumentException(ERROR_ENFERMEDAD_ID + ": " + id);
 		}
-		return traductor.entidad2dto(enfermedad);
+		return traductor.traduceADTO(enfermedad);
 	}
-	
+
 	@Override
 	public EnfermedadDTO modificaEnfermedad(Long id, EnfermedadDTO enfermedad) {
 		EnfermedadDTO resultado = obtenEnfermedad(id);
 		enfermedad.setId(id);
-		repositorioEnfermedad.update(traductor.dto2entidad(enfermedad));
+		repositorioEnfermedad.update(traductor.traduceAEntidad(enfermedad));
 		return resultado;
 	}
-	
+
 	@Override
 	public EnfermedadDTO eliminaEnfermedad(Long id) {
 		EnfermedadDTO resultado = obtenEnfermedad(id);
@@ -54,7 +54,7 @@ public class ServicioEnfermedadImpl implements ServicioEnfermedad {
 
 	@Override
 	public List<EnfermedadDTO> listaEnfermedades() {
-		return traductor.entidad2dto(repositorioEnfermedad.list());
+		return traductor.traduceAListaDTOs(repositorioEnfermedad.list());
 	}
-	
+
 }

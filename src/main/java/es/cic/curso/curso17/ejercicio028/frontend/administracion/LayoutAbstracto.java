@@ -1,4 +1,4 @@
-package es.cic.curso.curso17.ejercicio028.vista.administracion;
+package es.cic.curso.curso17.ejercicio028.frontend.administracion;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
@@ -14,7 +14,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Grid.SelectionMode;
 
-import es.cic.curso.curso17.ejercicio028.vista.VistaAdministracion;
+import es.cic.curso.curso17.ejercicio028.frontend.VistaAdministracion;
 
 @SuppressWarnings("serial")
 public abstract class LayoutAbstracto<K> extends VerticalLayout implements Component {
@@ -107,7 +107,7 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 		// Button : AÑADIR ELEMENTO
 		botonAgrega.setWidth(100.0F, Unit.PERCENTAGE);
 		botonAgrega.setIcon(FontAwesome.PLUS);
-		botonAgrega.addClickListener(e -> activaFormulario(true) );
+		botonAgrega.addClickListener(e -> activaFormulario(true));
 
 		// Button : EDITAR ELEMENTO
 		botonEdita.setWidth(100.0F, Unit.PERCENTAGE);

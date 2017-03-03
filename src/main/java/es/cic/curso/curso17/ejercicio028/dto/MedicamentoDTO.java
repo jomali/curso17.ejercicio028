@@ -3,7 +3,7 @@ package es.cic.curso.curso17.ejercicio028.dto;
 import es.cic.curso.curso17.ejercicio028.modelo.TipoMedicamento;
 
 public class MedicamentoDTO {
-	
+
 	/** Identificador. Rango de valores: <code>[-2^63, 2^63)</code>. */
 	private Long id;
 
@@ -18,6 +18,26 @@ public class MedicamentoDTO {
 
 	/** Descripción del medicamento. */
 	private String descripcion;
+
+	/**
+	 * Constructor vacío.
+	 */
+	public MedicamentoDTO() {
+
+	}
+
+	/**
+	 * Constructor. Crea un nuevo objeto a partir del tipo y el nombre pasados
+	 * como parámetro.
+	 * 
+	 * @param tipo
+	 * @param nombre
+	 */
+	public MedicamentoDTO(TipoMedicamento tipo, String nombre) {
+		this.tipo = tipo;
+		this.nombreTipo = tipo == null ? null : tipo.getNombre();
+		this.nombre = nombre;
+	}
 
 	/**
 	 * @return the id
@@ -55,35 +75,40 @@ public class MedicamentoDTO {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
 	/**
-	 * @param tipo the tipo to set
+	 * @param tipo
+	 *            the tipo to set
 	 */
 	public void setTipo(TipoMedicamento tipo) {
 		this.tipo = tipo;
 	}
 
 	/**
-	 * @param nombreTipo the nombreTipo to set
+	 * @param nombreTipo
+	 *            the nombreTipo to set
 	 */
 	public void setNombreTipo(String nombreTipo) {
 		this.nombreTipo = nombreTipo;
 	}
 
 	/**
-	 * @param nombre the nombre to set
+	 * @param nombre
+	 *            the nombre to set
 	 */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
 
 	/**
-	 * @param descripcion the descripcion to set
+	 * @param descripcion
+	 *            the descripcion to set
 	 */
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;

@@ -1,4 +1,4 @@
-package es.cic.curso.curso17.ejercicio028.vista;
+package es.cic.curso.curso17.ejercicio028.frontend;
 
 import java.io.File;
 
@@ -14,12 +14,13 @@ import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
+
+import es.cic.curso.curso17.ejercicio028.frontend.administracion.LayoutEnfermedades;
+import es.cic.curso.curso17.ejercicio028.frontend.administracion.LayoutMedicamentos;
+import es.cic.curso.curso17.ejercicio028.frontend.administracion.LayoutTiposMedicamento;
+
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
-
-import es.cic.curso.curso17.ejercicio028.vista.administracion.LayoutEnfermedades;
-import es.cic.curso.curso17.ejercicio028.vista.administracion.LayoutMedicamentos;
-import es.cic.curso.curso17.ejercicio028.vista.administracion.LayoutTiposMedicamento;
 
 public class VistaAdministracion extends VerticalLayout implements View {
 	private static final long serialVersionUID = -4543919716590901538L;

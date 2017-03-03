@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "MEDICAMENTO")
-public class Medicamento implements Identificable<Long> {
+public class Medicamento implements Cloneable, Identificable<Long> {
 	private static final long serialVersionUID = -8140507350269003336L;
 
 	/** Identificador. Rango de valores: <code>[-2^63, 2^63)</code>. */
@@ -21,7 +21,7 @@ public class Medicamento implements Identificable<Long> {
 	private Long id;
 
 	/** Referencia al tipo de medicamento. */
-	@JoinColumn(name = "id_medicamento")
+	@JoinColumn(name = "id_tipo_medicamento")
 	@ManyToOne(fetch = FetchType.LAZY)
 	private TipoMedicamento tipo;
 
@@ -122,7 +122,19 @@ public class Medicamento implements Identificable<Long> {
 
 	@Override
 	public String toString() {
-		return "Medicamento [id=" + id + ", tipo=" + tipo.getId() + ", nombre=" + nombre + ", descripcion=" + descripcion + "]";
+		Long idTipo = tipo == null ? null : tipo.getId();
+		return "Medicamento [id=" + id + ", tipo=" + idTipo + ", nombre=" + nombre + ", descripcion="
+				+ descripcion + "]";
+	}
+
+	@Override
+	public Medicamento clone() {
+		Medicamento clon = new Medicamento();
+		clon.id = id;
+		clon.tipo = tipo;
+		clon.nombre = nombre;
+		clon.descripcion = descripcion;
+		return clon;
 	}
 
 }

@@ -7,7 +7,8 @@ import es.cic.curso.curso17.ejercicio028.modelo.Enfermedad;
 
 @Repository
 @Transactional
-public class RepositorioEnfermedadImpl extends RepositorioAbstractoImpl<Long, Enfermedad> implements RepositorioEnfermedad {
+public class RepositorioEnfermedadImpl extends RepositorioAbstractoImpl<Long, Enfermedad>
+		implements RepositorioEnfermedad {
 
 	@Override
 	public Class<Enfermedad> obtenClaseT() {

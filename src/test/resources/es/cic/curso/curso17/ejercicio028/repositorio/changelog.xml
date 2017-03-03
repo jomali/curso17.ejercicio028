@@ -22,7 +22,7 @@
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="id_tipo_medicamento" type="INT(10)">
-				<constraints nullable="false" />
+				<constraints nullable="true" />
 			</column>
 			<column name="nombre" type="VARCHAR(100)">
 				<constraints nullable="false" />
@@ -38,6 +38,9 @@
 			</column>
 			<column name="nombre" type="VARCHAR(100)">
 				<constraints nullable="false" />
+			</column>
+			<column name="descripcion" type="VARCHAR(100)">
+				<constraints nullable="true" />
 			</column>
 		</createTable>
 

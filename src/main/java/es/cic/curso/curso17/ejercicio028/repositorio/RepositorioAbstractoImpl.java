@@ -7,7 +7,6 @@ import javax.persistence.PersistenceContext;
 
 import es.cic.curso.curso17.ejercicio028.modelo.Identificable;
 
-
 public abstract class RepositorioAbstractoImpl<K extends Number, T extends Identificable<K>>
 		implements Repositorio<K, T> {
 

@@ -1,16 +1,16 @@
-package es.cic.curso.curso17.ejercicio028.vista.administracion;
+package es.cic.curso.curso17.ejercicio028.frontend.administracion;
 
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Window;
 
-import es.cic.curso.curso17.ejercicio028.modelo.TipoMedicamento;
-import es.cic.curso.curso17.ejercicio028.vista.VistaAdministracion;
+import es.cic.curso.curso17.ejercicio028.frontend.VistaAdministracion;
+import es.cic.curso.curso17.ejercicio028.modelo.Medicamento;
 
-public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
-	private static final long serialVersionUID = 514378371321635909L;
+public class LayoutMedicamentos extends LayoutAbstracto<Medicamento> {
+	private static final long serialVersionUID = -9164756494824050779L;
 
-	public LayoutTiposMedicamento(VistaAdministracion padre) {
+	public LayoutMedicamentos(VistaAdministracion padre) {
 		super(padre);
 		// TODO Auto-generated constructor stub
 	}
@@ -28,9 +28,9 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 	}
 
 	@Override
-	protected void cargaFormulario(TipoMedicamento elemento) {
+	protected void cargaFormulario(Medicamento elemento) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 	@Override
 	public void cargaGrid() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

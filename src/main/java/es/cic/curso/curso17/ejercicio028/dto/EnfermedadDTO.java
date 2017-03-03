@@ -1,10 +1,10 @@
 package es.cic.curso.curso17.ejercicio028.dto;
 
 public class EnfermedadDTO {
-	
+
 	/** Identificador. Rango de valores: <code>[-2^63, 2^63)</code>. */
 	private Long id;
-	
+
 	/** Nombre de la enfermedad. */
 	private String nombre;
 
@@ -15,11 +15,12 @@ public class EnfermedadDTO {
 	 * Constructor vacío.
 	 */
 	public EnfermedadDTO() {
-		
+
 	}
-	
+
 	/**
 	 * Constructor. Crea un nuevo objeto con el nombre pasado como parámetro.
+	 * 
 	 * @param nombre
 	 */
 	public EnfermedadDTO(String nombre) {
@@ -48,21 +49,24 @@ public class EnfermedadDTO {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
 	/**
-	 * @param nombre the nombre to set
+	 * @param nombre
+	 *            the nombre to set
 	 */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
 
 	/**
-	 * @param descripcion the descripcion to set
+	 * @param descripcion
+	 *            the descripcion to set
 	 */
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
