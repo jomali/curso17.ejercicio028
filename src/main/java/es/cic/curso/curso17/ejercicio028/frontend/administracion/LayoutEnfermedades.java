@@ -6,12 +6,10 @@ import org.springframework.web.context.ContextLoader;
 
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.Page;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.TextArea;
@@ -37,6 +35,11 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 	public LayoutEnfermedades(VistaAdministracion padre) {
 		super(padre);
 		servicioEnfermedad = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioEnfermedad.class);
+	}
+	
+	@Override
+	protected String obtenDescripcionElementoSeleccionado() {
+		return elementoSeleccionado.getNombre();
 	}
 
 	@Override
@@ -126,6 +129,17 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 	}
 
 	@Override
+	protected Button generaBotonAceptarVentanaConfirmacionBorrado(Window ventana) {
+		Button botonAceptar = new Button("Aceptar");
+		botonAceptar.addClickListener(e -> {
+			servicioEnfermedad.eliminaEnfermedad(elementoSeleccionado.getId());
+			cargaGrid();
+			ventana.close();
+		});
+		return botonAceptar;
+	}
+
+	@Override
 	protected void cargaFormulario(EnfermedadDTO elemento) {
 		if (elemento == null) {
 			textFieldNombre.clear();
@@ -136,43 +150,6 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 			textAreaDescripcion.setValue(descripcion == null ? "" : descripcion);
 			botonAcepta.setEnabled(false);
 		}
-	}
-
-	@Override
-	protected Window creaVentanaConfirmacionBorrado() {
-		Window resultado = new Window();
-		resultado.setWidth(350.0F, Unit.PIXELS);
-		resultado.setModal(true);
-		resultado.setClosable(false);
-		resultado.setResizable(false);
-		resultado.setDraggable(false);
-
-		Label label = new Label(
-				"¿Está seguro de que desea borrar siguiente elemento:<br><strong>\"" + elementoSeleccionado.getNombre() + "\"</strong>?");
-		label.setContentMode(ContentMode.HTML);
-
-		Button botonAceptar = new Button("Aceptar");
-		botonAceptar.addClickListener(e -> {
-			servicioEnfermedad.eliminaEnfermedad(elementoSeleccionado.getId());
-			cargaGrid();
-			resultado.close();
-		});
-
-		Button botonCancelar = new Button("Cancelar");
-		botonCancelar.addClickListener(e -> resultado.close());
-
-		HorizontalLayout layoutBotones = new HorizontalLayout();
-		layoutBotones.setMargin(true);
-		layoutBotones.setSpacing(true);
-		layoutBotones.setWidth(100.0F, Unit.PERCENTAGE);
-		layoutBotones.addComponents(botonAceptar, botonCancelar);
-
-		final FormLayout content = new FormLayout();
-		content.setMargin(true);
-		content.addComponents(label, layoutBotones);
-		resultado.setContent(content);
-		resultado.center();
-		return resultado;
 	}
 
 	@Override

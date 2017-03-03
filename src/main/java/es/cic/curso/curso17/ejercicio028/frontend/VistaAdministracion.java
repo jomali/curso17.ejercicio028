@@ -32,18 +32,17 @@ public class VistaAdministracion extends VerticalLayout implements View {
 	/** Hoja de pestañas. */
 	private TabSheet tabSheetPrincipal;
 
+	/** Registra la pestaña actual. */
 	private Component componenteActual;
 
-	/**
-	 * Indica si <code>tabSheetPrincipal</code> tiene la navegación bloqueada.
-	 */
+	/** Indica si la hoja de pestañas tiene la navegación bloqueada. */
 	private boolean tabSheetPrincipalBloqueado;
 
 	/** Contenidos de la pestaña: Gestión enfermedades. */
 	private LayoutEnfermedades layoutEnfermedades;
 
 	/** Contenidos de la pestaña: Gestión tipos medicamento. */
-	private LayoutEnfermedades layoutTiposMedicamento;
+	private LayoutTiposMedicamento layoutTiposMedicamento;
 
 	/** Contenidos de la pestaña: Gestión medicamentos. */
 	private LayoutEnfermedades layoutMedicamentos;
@@ -91,7 +90,7 @@ public class VistaAdministracion extends VerticalLayout implements View {
 		layoutEnfermedades = new LayoutEnfermedades(this);
 
 		// Layout : GESTIÓN TIPOS de MEDICAMENTO
-		layoutTiposMedicamento = new LayoutEnfermedades(this);
+		layoutTiposMedicamento = new LayoutTiposMedicamento(this);
 
 		// Layout : GESTIÓN MEDICAMENTOS
 		layoutMedicamentos = new LayoutEnfermedades(this);
@@ -119,6 +118,7 @@ public class VistaAdministracion extends VerticalLayout implements View {
 	@Override
 	public void enter(ViewChangeEvent event) {
 		layoutEnfermedades.cargaGrid();
+		layoutTiposMedicamento.cargaGrid();
 	}
 
 	public void activaPestannas(boolean activado, Component componenteActual) {

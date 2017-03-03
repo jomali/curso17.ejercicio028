@@ -2,6 +2,7 @@ package es.cic.curso.curso17.ejercicio028.frontend.administracion;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -9,6 +10,7 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -18,6 +20,8 @@ import es.cic.curso.curso17.ejercicio028.frontend.VistaAdministracion;
 
 @SuppressWarnings("serial")
 public abstract class LayoutAbstracto<K> extends VerticalLayout implements Component {
+
+	protected static final float ANCHO_VENTANA_CONFIRMACION = 400.0F; // px
 
 	/** Referencia a la vista principal. */
 	protected VistaAdministracion padre;
@@ -143,15 +147,52 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 		layoutFormulario.setEnabled(activado);
 	}
 
+	protected Window creaVentanaConfirmacionBorrado() {
+		Window resultado = new Window();
+		resultado.setWidth(ANCHO_VENTANA_CONFIRMACION, Unit.PIXELS);
+		resultado.setModal(true);
+		resultado.setClosable(false);
+		resultado.setResizable(false);
+		resultado.setDraggable(false);
+
+		Label label = new Label(obtenDescripcionElementoSeleccionado() == null
+				? "¿Está seguro de que desea borrar el elemento seleccionado?"
+				: "Está a punto de borrar el siguiente elemento:<br><br><strong>\""
+						+ obtenDescripcionElementoSeleccionado() + "\"</strong>");
+		label.setContentMode(ContentMode.HTML);
+
+		Button botonAceptar = generaBotonAceptarVentanaConfirmacionBorrado(resultado);
+
+		Button botonCancelar = new Button("Cancelar");
+		botonCancelar.addClickListener(e -> resultado.close());
+
+		HorizontalLayout layoutBotones = new HorizontalLayout();
+		layoutBotones.setMargin(true);
+		layoutBotones.setSpacing(true);
+		layoutBotones.setWidth(100.0F, Unit.PERCENTAGE);
+		layoutBotones.addComponents(botonAceptar, botonCancelar);
+
+		final FormLayout content = new FormLayout();
+		content.setMargin(true);
+		content.addComponents(label, layoutBotones);
+		resultado.setContent(content);
+		resultado.center();
+		return resultado;
+	}
+
+	protected String obtenDescripcionElementoSeleccionado() {
+		return null;
+	}
+
 	// /////////////////////////////////////////////////////////////////////////
 
 	protected abstract Grid generaGrid();
 
 	protected abstract FormLayout generaLayoutFormulario();
 
-	protected abstract void cargaFormulario(K elemento);
+	protected abstract Button generaBotonAceptarVentanaConfirmacionBorrado(Window ventana);
 
-	protected abstract Window creaVentanaConfirmacionBorrado();
+	protected abstract void cargaFormulario(K elemento);
 
 	public abstract void cargaGrid();
 

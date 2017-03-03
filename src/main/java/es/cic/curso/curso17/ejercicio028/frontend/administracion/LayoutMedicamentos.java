@@ -1,5 +1,6 @@
 package es.cic.curso.curso17.ejercicio028.frontend.administracion;
 
+import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Window;
@@ -12,7 +13,6 @@ public class LayoutMedicamentos extends LayoutAbstracto<Medicamento> {
 
 	public LayoutMedicamentos(VistaAdministracion padre) {
 		super(padre);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -28,21 +28,21 @@ public class LayoutMedicamentos extends LayoutAbstracto<Medicamento> {
 	}
 
 	@Override
-	protected void cargaFormulario(Medicamento elemento) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected Window creaVentanaConfirmacionBorrado() {
+	protected Button generaBotonAceptarVentanaConfirmacionBorrado(Window ventana) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
+	protected void cargaFormulario(Medicamento elemento) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public void cargaGrid() {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 }
