@@ -5,12 +5,15 @@ import java.util.Collection;
 import org.springframework.web.context.ContextLoader;
 
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.server.Page;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
@@ -65,45 +68,51 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		layoutFormulario.setSpacing(true);
 
 		textFieldNombre = new TextField("Nombre:");
+		textFieldNombre.setSizeFull();
 		textFieldNombre.setInputPrompt("Nombre");
 		textFieldNombre.setRequired(true);
-		textFieldNombre.setSizeFull();
 
 		textAreaDescripcion = new TextArea("Descripción:");
 		textAreaDescripcion.setRows(5);
 		textAreaDescripcion.setSizeFull();
+		textAreaDescripcion.setInputPrompt("Descripción");
 
 		Button botonAcepta = new Button("Aceptar");
 		botonAcepta.addClickListener(e -> {
-			EnfermedadDTO enfermedad = new EnfermedadDTO();
-			enfermedad.setNombre(textFieldNombre.getValue());
-			enfermedad.setDescripcion(textAreaDescripcion.getValue());
+			EnfermedadDTO nuevaEnfermedad = new EnfermedadDTO();
+			nuevaEnfermedad.setNombre(textFieldNombre.getValue());
+			nuevaEnfermedad.setDescripcion(textAreaDescripcion.getValue());
+			activaFormulario(false);
+			// Agregar elemento:
 			if (elementoSeleccionado == null) {
-				servicioEnfermedad.agregaEnfermedad(enfermedad);
+				servicioEnfermedad.agregaEnfermedad(nuevaEnfermedad);
 				cargaGrid();
 				botonAgrega.setEnabled(true);
 				botonEdita.setEnabled(false);
 				botonElimina.setEnabled(false);
-			} else {
-				servicioEnfermedad.modificaEnfermedad(elementoSeleccionado.getId(), enfermedad);
-				botonAgrega.setEnabled(false);
-				botonEdita.setEnabled(true);
-				botonElimina.setEnabled(true);
+				new Notification("Entrada añadida: <strong>\"" + nuevaEnfermedad.getNombre() + "\"</strong>", "",
+						Type.TRAY_NOTIFICATION, true).show(Page.getCurrent());
+			}
+			// Editar elemento:
+			else {
+				servicioEnfermedad.modificaEnfermedad(elementoSeleccionado.getId(), nuevaEnfermedad);
+				cargaGrid();
+				elementoSeleccionado = null;
+				botonAgrega.setEnabled(true); // botonAgrega.setEnabled(false);
+				botonEdita.setEnabled(false); // botonEdita.setEnabled(true);
+				botonElimina.setEnabled(false); // botonElimina.setEnabled(true);
+				new Notification("Entrada modificada: <strong>\"" + nuevaEnfermedad.getNombre() + "\"</strong>", "",
+						Type.TRAY_NOTIFICATION, true).show(Page.getCurrent());
 			}
 			cargaFormulario(elementoSeleccionado);
-			padre.activaPestannas(true, this);
-			grid.setEnabled(true);
-			layoutFormulario.setEnabled(false);
 		});
 		Button botonCancela = new Button("Cancelar");
 		botonCancela.addClickListener(e -> {
-			botonAgrega.setEnabled(true);
+			activaFormulario(false);
+			botonAgrega.setEnabled(elementoSeleccionado == null ? true : false);
 			botonEdita.setEnabled(elementoSeleccionado == null ? false : true);
 			botonElimina.setEnabled(elementoSeleccionado == null ? false : true);
 			cargaFormulario(elementoSeleccionado);
-			padre.activaPestannas(true, this);
-			grid.setEnabled(true);
-			layoutFormulario.setEnabled(false);
 		});
 
 		HorizontalLayout layoutBotonesFormulario = new HorizontalLayout();

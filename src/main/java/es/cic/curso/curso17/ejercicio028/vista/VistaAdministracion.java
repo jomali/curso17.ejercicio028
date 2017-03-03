@@ -13,6 +13,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 
@@ -101,10 +102,8 @@ public class VistaAdministracion extends VerticalLayout implements View {
 		tabSheetPrincipal.addTab(layoutMedicamentos, PESTANNA_MEDICAMENTOS);
 		tabSheetPrincipal.addSelectedTabChangeListener(e -> {
 			if (tabSheetPrincipalBloqueado) {
-				// FIXME - Crear ventana modal
 				tabSheetPrincipal.setSelectedTab(componenteActual);
-				// tabSheetPrincipal.setSelectedTab(layoutEnfermedades);
-				Notification.show("No puede cambiar de pestaña con el formulario abierto.");
+				Notification.show("No se puede cambiar de pestaña con el formulario abierto.", Type.WARNING_MESSAGE);
 			}
 		});
 		tabSheetPrincipal.setSelectedTab(layoutEnfermedades);

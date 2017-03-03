@@ -50,7 +50,7 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 
 		HorizontalSplitPanel splitPanelPrincipal = new HorizontalSplitPanel();
 		splitPanelPrincipal.setSplitPosition(30.0F, Unit.PERCENTAGE);
-		splitPanelPrincipal.setMinSplitPosition(220.0F, Unit.PIXELS);
+		splitPanelPrincipal.setMinSplitPosition(224.0F, Unit.PIXELS);
 		splitPanelPrincipal.setMaxSplitPosition(70.0F, Unit.PERCENTAGE);
 		splitPanelPrincipal.setLocked(false);
 		splitPanelPrincipal.setFirstComponent(generaLayoutTabla());
@@ -78,7 +78,7 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 
 		// Button : LIMPIAR
 		Button botonLimpia = new Button();
-		botonLimpia.setIcon(FontAwesome.FILTER); // FontAwesome.ERASER
+		botonLimpia.setIcon(FontAwesome.ERASER);
 		botonLimpia.setVisible(false);
 
 		// Grid : GRID
@@ -107,27 +107,13 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 		// Button : AÑADIR ELEMENTO
 		botonAgrega.setWidth(100.0F, Unit.PERCENTAGE);
 		botonAgrega.setIcon(FontAwesome.PLUS);
-		botonAgrega.addClickListener(e -> {
-			botonAgrega.setEnabled(false);
-			botonEdita.setEnabled(false);
-			botonElimina.setEnabled(false);
-			padre.activaPestannas(false, this);
-			grid.setEnabled(false);
-			layoutFormulario.setEnabled(true);
-		});
+		botonAgrega.addClickListener(e -> activaFormulario(true) );
 
 		// Button : EDITAR ELEMENTO
 		botonEdita.setWidth(100.0F, Unit.PERCENTAGE);
 		botonEdita.setIcon(FontAwesome.EDIT);
 		botonEdita.setEnabled(false);
-		botonEdita.addClickListener(e -> {
-			botonAgrega.setEnabled(false);
-			botonEdita.setEnabled(false);
-			botonElimina.setEnabled(false);
-			padre.activaPestannas(false, this);
-			grid.setEnabled(false);
-			layoutFormulario.setEnabled(true);
-		});
+		botonEdita.addClickListener(e -> activaFormulario(true));
 
 		// Button : ELIMINAR ELEMENTO
 		botonElimina.setWidth(100.0F, Unit.PERCENTAGE);
@@ -145,6 +131,16 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 		layoutEdicion.addComponents(layoutBotones, layoutFormulario);
 
 		return layoutEdicion;
+	}
+
+	protected void activaFormulario(boolean activado) {
+		botonAgrega.setEnabled(!activado);
+		botonEdita.setEnabled(!activado);
+		botonElimina.setEnabled(!activado);
+		padre.activaPestannas(!activado, this);
+		textFieldFiltro.setEnabled(!activado);
+		grid.setEnabled(!activado);
+		layoutFormulario.setEnabled(activado);
 	}
 
 	// /////////////////////////////////////////////////////////////////////////
