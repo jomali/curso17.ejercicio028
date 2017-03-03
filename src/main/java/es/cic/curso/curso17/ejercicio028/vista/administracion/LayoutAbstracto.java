@@ -2,6 +2,7 @@ package es.cic.curso.curso17.ejercicio028.vista.administracion;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -9,12 +10,13 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Grid.SelectionMode;
 
 @SuppressWarnings("serial")
-public abstract class LayoutAbstracto<K> extends HorizontalSplitPanel implements Component {
+public abstract class LayoutAbstracto<K> extends VerticalLayout implements Component {
 	
 	/** Referencia al elemento seleccionado en el grid. */
 	protected K elementoSeleccionado;
@@ -38,12 +40,24 @@ public abstract class LayoutAbstracto<K> extends HorizontalSplitPanel implements
 	protected FormLayout layoutFormulario = new FormLayout();
 	
 	public LayoutAbstracto() {
-		setSplitPosition(30.0F, Unit.PERCENTAGE);
-		setMinSplitPosition(220.0F, Unit.PIXELS);
-		setMaxSplitPosition(70.0F, Unit.PERCENTAGE);
-		setLocked(false);
-		setFirstComponent(generaLayoutTabla());
-		setSecondComponent(generaLayoutEdicion());
+		setMargin(new MarginInfo(false, false, true, false));
+		setSpacing(false);
+		
+		HorizontalLayout h = new HorizontalLayout();
+		h.setMargin(false);
+		h.setSpacing(false);
+		Label label = new Label("&nbsp;", ContentMode.HTML);
+		h.addComponent(label);
+		
+		HorizontalSplitPanel s = new HorizontalSplitPanel();
+		s.setSplitPosition(30.0F, Unit.PERCENTAGE);
+		s.setMinSplitPosition(220.0F, Unit.PIXELS);
+		s.setMaxSplitPosition(70.0F, Unit.PERCENTAGE);
+		s.setLocked(false);
+		s.setFirstComponent(generaLayoutTabla());
+		s.setSecondComponent(generaLayoutEdicion());
+		
+		addComponents(h, s);
 	}
 
 	// /////////////////////////////////////////////////////////////////////////
@@ -52,7 +66,7 @@ public abstract class LayoutAbstracto<K> extends HorizontalSplitPanel implements
 	private VerticalLayout generaLayoutTabla() {
 		// Layout : TABLA
 		VerticalLayout layoutTabla = new VerticalLayout();
-		layoutTabla.setMargin(new MarginInfo(true, true, false, false));
+		layoutTabla.setMargin(new MarginInfo(false, true, false, false));
 		layoutTabla.setSpacing(true);
 
 		// Layout : FILTRO
@@ -83,7 +97,7 @@ public abstract class LayoutAbstracto<K> extends HorizontalSplitPanel implements
 	private VerticalLayout generaLayoutEdicion() {
 		// Layout : EDICIÓN
 		VerticalLayout layoutEdicion = new VerticalLayout();
-		layoutEdicion.setMargin(new MarginInfo(true, false, false, true));
+		layoutEdicion.setMargin(new MarginInfo(false, false, false, true));
 		layoutEdicion.setSpacing(true);
 		
 		// Layout : BOTONES

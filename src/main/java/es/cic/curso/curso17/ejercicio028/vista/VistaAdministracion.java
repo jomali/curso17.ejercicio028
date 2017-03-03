@@ -29,7 +29,7 @@ public class VistaAdministracion extends VerticalLayout implements View {
 		HorizontalLayout layoutEncabezado = inicializaLayoutEncabezado();
 		// layout. CONTENIDO
 		VerticalLayout layoutContenido = new VerticalLayout();
-		layoutContenido.setMargin(new MarginInfo(false, true, true, true));
+		layoutContenido.setMargin(new MarginInfo(false, true, false, true)); // false, true, true, true
 		layoutContenido.setSpacing(true);
 		
 		// layout. CONTENIDO > GESTIÓN ENFERMEDADES

@@ -1,11 +1,14 @@
 # CURSO17.EJERCICIO028
 
 
-## Introducción
+## 1. Introducción
 
-X
+Medicamento.
+Tipo (antitusivo, antibiótico...)
+Enfermedades
 
 
-## Casos de uso
+
+### Casos de uso
 
 X
