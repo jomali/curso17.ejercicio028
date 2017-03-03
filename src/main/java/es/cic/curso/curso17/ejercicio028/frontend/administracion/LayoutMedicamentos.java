@@ -18,10 +18,9 @@ import com.vaadin.ui.Notification.Type;
 
 import es.cic.curso.curso17.ejercicio028.dto.MedicamentoDTO;
 import es.cic.curso.curso17.ejercicio028.frontend.VistaAdministracion;
-import es.cic.curso.curso17.ejercicio028.modelo.Medicamento;
 import es.cic.curso.curso17.ejercicio028.servicio.ServicioMedicamento;
 
-public class LayoutMedicamentos extends LayoutAbstracto<Medicamento> {
+public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 	private static final long serialVersionUID = -9164756494824050779L;
 
 	/** Lógica de negocio con acceso a BB.DD.: medicamentos */
@@ -49,7 +48,7 @@ public class LayoutMedicamentos extends LayoutAbstracto<Medicamento> {
 		grid.setColumns("nombre");
 		grid.addSelectionListener(e -> {
 			if (!e.getSelected().isEmpty()) {
-				elementoSeleccionado = (Medicamento) e.getSelected().iterator().next();
+				elementoSeleccionado = (MedicamentoDTO) e.getSelected().iterator().next();
 				botonAgrega.setEnabled(false);
 				botonEdita.setEnabled(true);
 				botonElimina.setEnabled(true);
@@ -141,7 +140,7 @@ public class LayoutMedicamentos extends LayoutAbstracto<Medicamento> {
 	}
 
 	@Override
-	protected void cargaFormulario(Medicamento elemento) {
+	protected void cargaFormulario(MedicamentoDTO elemento) {
 		if (elemento == null) {
 			textFieldNombre.clear();
 			textAreaDescripcion.clear();
