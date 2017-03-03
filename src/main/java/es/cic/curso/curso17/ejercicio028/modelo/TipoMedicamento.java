@@ -1,5 +1,6 @@
 package es.cic.curso.curso17.ejercicio028.modelo;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -7,14 +8,22 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "RECETA")
-public class Receta implements Identificable<Long> {
-	private static final long serialVersionUID = -1155716435604985585L;
-	
+@Table(name = "TIPO_MEDICAMENTO")
+public class TipoMedicamento implements Identificable<Long> {
+	private static final long serialVersionUID = -2731182807863562201L;
+
 	/** Identificador. Rango de valores: <code>[-2^63, 2^63)</code>. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+
+	/** Nombre del tipo medicamento. */
+	@Column(name = "nombre")
+	private String nombre;
+
+	/** Descripción del tipo medicamento. */
+	@Column(name = "descripcion")
+	private String descripcion;
 
 	/**
 	 * @return the id
@@ -25,11 +34,39 @@ public class Receta implements Identificable<Long> {
 	}
 
 	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @return the descripcion
+	 */
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
 	 * @param id the id to set
 	 */
 	@Override
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	/**
+	 * @param nombre the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @param descripcion the descripcion to set
+	 */
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 
 	@Override
@@ -39,7 +76,7 @@ public class Receta implements Identificable<Long> {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -48,7 +85,7 @@ public class Receta implements Identificable<Long> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Receta other = (Receta) obj;
+		TipoMedicamento other = (TipoMedicamento) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -59,7 +96,7 @@ public class Receta implements Identificable<Long> {
 
 	@Override
 	public String toString() {
-		return "Receta [id=" + id + "]";
+		return "TipoMedicamento [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + "]";
 	}
 	
 }

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+					http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+	<changeSet author="usuario (generated)" id="1400847488681-1">
+	
+		<createTable catalogName="curso17" tableName="ENFERMEDAD">
+			<column autoIncrement="true" name="id" type="INT(10)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="nombre" type="VARCHAR(100)">
+				<constraints nullable="false" />
+			</column>
+			<column name="descripcion" type="VARCHAR(100)">
+				<constraints nullable="true" />
+			</column>
+		</createTable>
+	
+		<createTable catalogName="curso17" tableName="MEDICAMENTO">
+			<column autoIncrement="true" name="id" type="INT(10)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="id_tipo_medicamento" type="INT(10)">
+				<constraints nullable="false" />
+			</column>
+			<column name="nombre" type="VARCHAR(100)">
+				<constraints nullable="false" />
+			</column>
+			<column name="descripcion" type="VARCHAR(100)">
+				<constraints nullable="true" />
+			</column>
+		</createTable>
+		
+		<createTable catalogName="curso17" tableName="TIPO_MEDICAMENTO">
+			<column autoIncrement="true" name="id" type="INT(10)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="nombre" type="VARCHAR(100)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<createTable catalogName="curso17" tableName="RECETA">
+			<column autoIncrement="true" name="id" type="INT(10)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+		</createTable>
+
+		<createTable catalogName="curso17" tableName="TRATAMIENTO">
+			<column name="id_receta" type="INT(10)">
+				<constraints nullable="false" />
+			</column>
+			<column name="id_medicamento" type="INT(10)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	
+		<addPrimaryKey constraintName="pk_tratamiento" tableName="TRATAMIENTO"
+			columnNames="id_receta, id_medicamento" />
+		
+		<addForeignKeyConstraint constraintName="fk_medicamento_id_tipo_medicamento"
+			referencedTableName="TIPO_MEDICAMENTO" referencedColumnNames="id"
+			baseTableName="MEDICAMENTO" baseColumnNames="id_tipo_medicamento" />
+
+		<addForeignKeyConstraint constraintName="fk_tratamiento_id_medicamento"
+			referencedTableName="MEDICAMENTO" referencedColumnNames="id"
+			baseTableName="TRATAMIENTO" baseColumnNames="id_medicamento" />
+			
+		<addForeignKeyConstraint constraintName="fk_tratamiento_id_receta"
+			referencedTableName="RECETA" referencedColumnNames="id"
+			baseTableName="TRATAMIENTO" baseColumnNames="id_receta" />
+
+	</changeSet>
+</databaseChangeLog>
