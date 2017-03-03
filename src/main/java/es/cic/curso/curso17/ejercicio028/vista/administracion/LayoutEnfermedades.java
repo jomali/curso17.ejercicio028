@@ -5,15 +5,19 @@ import java.util.Collection;
 import org.springframework.web.context.ContextLoader;
 
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.Window;
 
 import es.cic.curso.curso17.ejercicio028.dto.EnfermedadDTO;
 import es.cic.curso.curso17.ejercicio028.servicio.ServicioEnfermedad;
+import es.cic.curso.curso17.ejercicio028.vista.VistaAdministracion;
 
 public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 	private static final long serialVersionUID = 6467264543844871753L;
@@ -24,9 +28,8 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 
 	private TextArea textAreaDescripcion;
 
-	public LayoutEnfermedades() {
-		super();
-
+	public LayoutEnfermedades(VistaAdministracion padre) {
+		super(padre);
 		servicioEnfermedad = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioEnfermedad.class);
 	}
 
@@ -40,13 +43,16 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		grid.addSelectionListener(e -> {
 			if (!e.getSelected().isEmpty()) {
 				elementoSeleccionado = (EnfermedadDTO) e.getSelected().iterator().next();
+				botonAgrega.setEnabled(false);
 				botonEdita.setEnabled(true);
 				botonElimina.setEnabled(true);
 			} else {
 				elementoSeleccionado = null;
+				botonAgrega.setEnabled(true);
 				botonEdita.setEnabled(false);
 				botonElimina.setEnabled(false);
 			}
+			cargaFormulario(elementoSeleccionado);
 		});
 
 		return grid;
@@ -72,15 +78,32 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 			EnfermedadDTO enfermedad = new EnfermedadDTO();
 			enfermedad.setNombre(textFieldNombre.getValue());
 			enfermedad.setDescripcion(textAreaDescripcion.getValue());
-			servicioEnfermedad.agregaEnfermedad(enfermedad);
-			cargaGrid();
+			if (elementoSeleccionado == null) {
+				servicioEnfermedad.agregaEnfermedad(enfermedad);
+				cargaGrid();
+				botonAgrega.setEnabled(true);
+				botonEdita.setEnabled(false);
+				botonElimina.setEnabled(false);
+			} else {
+				servicioEnfermedad.modificaEnfermedad(elementoSeleccionado.getId(), enfermedad);
+				botonAgrega.setEnabled(false);
+				botonEdita.setEnabled(true);
+				botonElimina.setEnabled(true);
+			}
+			cargaFormulario(elementoSeleccionado);
+			padre.activaPestannas(true, this);
+			grid.setEnabled(true);
+			layoutFormulario.setEnabled(false);
 		});
-		Button botonCancela = new Button("Cancela");
+		Button botonCancela = new Button("Cancelar");
 		botonCancela.addClickListener(e -> {
 			botonAgrega.setEnabled(true);
 			botonEdita.setEnabled(elementoSeleccionado == null ? false : true);
 			botonElimina.setEnabled(elementoSeleccionado == null ? false : true);
-			this.layoutFormulario.setEnabled(false);
+			cargaFormulario(elementoSeleccionado);
+			padre.activaPestannas(true, this);
+			grid.setEnabled(true);
+			layoutFormulario.setEnabled(false);
 		});
 
 		HorizontalLayout layoutBotonesFormulario = new HorizontalLayout();
@@ -96,12 +119,48 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		if (elemento == null) {
 			textFieldNombre.clear();
 			textAreaDescripcion.clear();
-			 layoutFormulario.setEnabled(false);
 		} else {
+			String descripcion = elemento.getDescripcion();
 			textFieldNombre.setValue(elemento.getNombre());
-			textAreaDescripcion.setValue(elemento.getDescripcion());
-			 layoutFormulario.setEnabled(true);
+			textAreaDescripcion.setValue(descripcion == null ? "" : descripcion);
 		}
+	}
+
+	@Override
+	protected Window creaVentanaConfirmacionBorrado() {
+		Window resultado = new Window();
+		resultado.setWidth(350.0F, Unit.PIXELS);
+		resultado.setModal(true);
+		resultado.setClosable(false);
+		resultado.setResizable(false);
+		resultado.setDraggable(false);
+
+		Label label = new Label(
+				"¿Está seguro de que desea borrar: <strong>\"" + elementoSeleccionado.getNombre() + "\"</strong>?");
+		label.setContentMode(ContentMode.HTML);
+
+		Button botonAceptar = new Button("Aceptar");
+		botonAceptar.addClickListener(e -> {
+			servicioEnfermedad.eliminaEnfermedad(elementoSeleccionado.getId());
+			cargaGrid();
+			resultado.close();
+		});
+
+		Button botonCancelar = new Button("Cancelar");
+		botonCancelar.addClickListener(e -> resultado.close());
+
+		HorizontalLayout layoutBotones = new HorizontalLayout();
+		layoutBotones.setMargin(true);
+		layoutBotones.setSpacing(true);
+		layoutBotones.setWidth(100.0F, Unit.PERCENTAGE);
+		layoutBotones.addComponents(botonAceptar, botonCancelar);
+
+		final FormLayout content = new FormLayout();
+		content.setMargin(true);
+		content.addComponents(label, layoutBotones);
+		resultado.setContent(content);
+		resultado.center();
+		return resultado;
 	}
 
 	@Override
