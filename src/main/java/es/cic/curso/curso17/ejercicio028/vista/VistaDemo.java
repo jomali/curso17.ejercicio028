@@ -9,6 +9,8 @@ import com.vaadin.ui.VerticalLayout;
 
 import es.cic.curso.curso17.ejercicio028.dto.EnfermedadDTO;
 import es.cic.curso.curso17.ejercicio028.servicio.ServicioEnfermedad;
+import es.cic.curso.curso17.ejercicio028.servicio.ServicioMedicamento;
+import es.cic.curso.curso17.ejercicio028.servicio.ServicioTipoMedicamento;
 
 public class VistaDemo extends VerticalLayout implements View {
 	private static final long serialVersionUID = -4944108531763554734L;
@@ -16,8 +18,14 @@ public class VistaDemo extends VerticalLayout implements View {
 	/** Permite navegar entre las vistas de la aplicación. */
 	private Navigator navegador;
 
-	/** Lógica de negocio con acceso a BB.DD. */
+	/** Lógica de negocio con acceso a BB.DD.: enfermedades */
 	private ServicioEnfermedad servicioEnfermedad;
+	
+	/** Lógica de negocio con acceso a BB.DD.: tipos de medicamento */
+	private ServicioTipoMedicamento servicioTipoMedicamento;
+	
+	/** Lógica de negocio con acceso a BB.DD.: medicamentos */
+	private ServicioMedicamento servicioMedicamento;
 
 	public VistaDemo(Navigator navegador) {
 		this.navegador = navegador;
@@ -36,6 +44,8 @@ public class VistaDemo extends VerticalLayout implements View {
 			servicioEnfermedad.agregaEnfermedad(new EnfermedadDTO("fascitis"));
 			servicioEnfermedad.agregaEnfermedad(new EnfermedadDTO("porfiria"));
 		}
+		
+		// Inicialización de tipos de medicamento
 
 		navegador.navigateTo(IUPrincipal.VISTA_ADMINISTRACION);
 	}

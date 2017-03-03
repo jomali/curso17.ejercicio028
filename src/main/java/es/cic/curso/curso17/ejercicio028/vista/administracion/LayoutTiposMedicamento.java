@@ -2,6 +2,7 @@ package es.cic.curso.curso17.ejercicio028.vista.administracion;
 
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Window;
 
 import es.cic.curso.curso17.ejercicio028.modelo.TipoMedicamento;
 import es.cic.curso.curso17.ejercicio028.vista.VistaAdministracion;
@@ -30,6 +31,12 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 	protected void cargaFormulario(TipoMedicamento elemento) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	protected Window creaVentanaConfirmacionBorrado() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override

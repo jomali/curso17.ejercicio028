@@ -2,6 +2,7 @@ package es.cic.curso.curso17.ejercicio028.vista.administracion;
 
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Window;
 
 import es.cic.curso.curso17.ejercicio028.modelo.Medicamento;
 import es.cic.curso.curso17.ejercicio028.vista.VistaAdministracion;
@@ -33,10 +34,15 @@ public class LayoutMedicamentos extends LayoutAbstracto<Medicamento> {
 	}
 
 	@Override
+	protected Window creaVentanaConfirmacionBorrado() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
 	public void cargaGrid() {
 		// TODO Auto-generated method stub
 		
 	}
-
 
 }

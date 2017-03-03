@@ -29,6 +29,13 @@ public class MedicamentoDTOTraductor {
 		return resultado;
 	}
 
+	public List<MedicamentoDTO> entidad2dto(List<Medicamento>  medicamentos) {
+		List<MedicamentoDTO> resultado = new ArrayList<>();
+		for (Medicamento medicamento : medicamentos) {
+			resultado.add(entidad2dto(medicamento));
+		}
+		return resultado;
+	}
 	
 	public List<Medicamento> dto2entidad(List<MedicamentoDTO> medicamentosDTO) {
 		List<Medicamento> resultado = new ArrayList<>();
