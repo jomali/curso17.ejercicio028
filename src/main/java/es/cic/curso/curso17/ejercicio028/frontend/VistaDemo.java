@@ -75,12 +75,12 @@ public class VistaDemo extends VerticalLayout implements View {
 			tipo7.setNombre("antiséptico");
 			servicioTipoMedicamento.agregaTipoMedicamento(tipo7);
 
-//			servicioMedicamento.agregaMedicamento(new MedicamentoDTO(tipo4, "cacolax"));
-//			servicioMedicamento.agregaMedicamento(new MedicamentoDTO(tipo5, "neobrufenol"));
-//			servicioMedicamento.agregaMedicamento(new MedicamentoDTO(tipo5, "ibuprofenol"));
-//			servicioMedicamento.agregaMedicamento(new MedicamentoDTO(tipo5, "paracetamol"));
-//			servicioMedicamento.agregaMedicamento(new MedicamentoDTO(tipo5, "sexinononol"));
-//			servicioMedicamento.agregaMedicamento(new MedicamentoDTO(null, "requetefortín 2000"));
+			servicioMedicamento.agregaMedicamento(new MedicamentoDTO(tipo4, "cacolax"));
+			servicioMedicamento.agregaMedicamento(new MedicamentoDTO(tipo5, "neobrufenol"));
+			servicioMedicamento.agregaMedicamento(new MedicamentoDTO(tipo5, "ibuprofenol"));
+			servicioMedicamento.agregaMedicamento(new MedicamentoDTO(tipo5, "paracetamol"));
+			servicioMedicamento.agregaMedicamento(new MedicamentoDTO(tipo5, "sexinononol"));
+			servicioMedicamento.agregaMedicamento(new MedicamentoDTO(null, "requetefortín 2000"));
 		}
 		
 		Notification.show("Cargados datos de DEMOSTRACIÓN.", Type.WARNING_MESSAGE);

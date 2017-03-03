@@ -45,7 +45,7 @@ public class VistaAdministracion extends VerticalLayout implements View {
 	private LayoutTiposMedicamento layoutTiposMedicamento;
 
 	/** Contenidos de la pestaña: Gestión medicamentos. */
-	private LayoutEnfermedades layoutMedicamentos;
+	private LayoutMedicamentos layoutMedicamentos;
 
 	public VistaAdministracion() {
 		setMargin(true);
@@ -93,7 +93,7 @@ public class VistaAdministracion extends VerticalLayout implements View {
 		layoutTiposMedicamento = new LayoutTiposMedicamento(this);
 
 		// Layout : GESTIÓN MEDICAMENTOS
-		layoutMedicamentos = new LayoutEnfermedades(this);
+		layoutMedicamentos = new LayoutMedicamentos(this);
 
 		// TabSheet : PRINCIPAL
 		tabSheetPrincipal = new TabSheet();
