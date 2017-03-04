@@ -22,6 +22,7 @@ import es.cic.curso.curso17.ejercicio028.frontend.VistaAdministracion;
 public abstract class LayoutAbstracto<K> extends VerticalLayout implements Component {
 
 	protected static final float ANCHO_VENTANA_CONFIRMACION = 400.0F; // px
+	protected static final float ALTO_VENTANA_CONFIRMACION = 175.0F; // px
 
 	/** Referencia a la vista principal. */
 	protected VistaAdministracion padre;
@@ -31,7 +32,7 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 
 	/** Campo de texto para el filtro de la tabla. */
 	protected TextField textFieldFiltro;
-	
+
 	/** Botón para acción: cancelar selección */
 	protected Button botonLimpiaSeleccion;
 
@@ -57,7 +58,7 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 
 		HorizontalSplitPanel splitPanelPrincipal = new HorizontalSplitPanel();
 		splitPanelPrincipal.setSplitPosition(posicionDivisor, Unit.PERCENTAGE);
-		splitPanelPrincipal.setMinSplitPosition(250.0F, Unit.PIXELS); // 224
+		splitPanelPrincipal.setMinSplitPosition(275.0F, Unit.PIXELS); // 224
 		splitPanelPrincipal.setMaxSplitPosition(70.0F, Unit.PERCENTAGE);
 		splitPanelPrincipal.setLocked(false);
 		splitPanelPrincipal.setFirstComponent(generaLayoutTabla());
@@ -89,8 +90,10 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 
 		// Button : LIMPIAR SELECCIÓN
 		botonLimpiaSeleccion = new Button();
+		botonLimpiaSeleccion.setDescription("Cancela la selección actual");
 		botonLimpiaSeleccion.setEnabled(false);
 		botonLimpiaSeleccion.setIcon(FontAwesome.ERASER);
+		// botonLimpiaSeleccion.setStyleName("primary");
 		botonLimpiaSeleccion.addClickListener(e -> {
 			botonAgrega.setEnabled(true);
 			botonEdita.setEnabled(false);
@@ -140,22 +143,26 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 		layoutBotones.setSpacing(true);
 
 		// Button : AÑADIR ELEMENTO
-		botonAgrega.setWidth(100.0F, Unit.PERCENTAGE);
+		botonAgrega.setDescription("Agrega un nuevo elemento al sistema");
 		botonAgrega.setIcon(FontAwesome.PLUS);
-//		botonAgrega.setStyleName("primary");
+		botonAgrega.setStyleName("primary");
+		botonAgrega.setWidth(100.0F, Unit.PERCENTAGE);
 		botonAgrega.addClickListener(e -> activaFormulario(true));
 
 		// Button : EDITAR ELEMENTO
-		botonEdita.setWidth(100.0F, Unit.PERCENTAGE);
-		botonEdita.setIcon(FontAwesome.EDIT);
+		botonEdita.setDescription("Modifica el elemento seleccionado");
 		botonEdita.setEnabled(false);
+		botonEdita.setIcon(FontAwesome.EDIT);
+		botonEdita.setStyleName("primary");
+		botonEdita.setWidth(100.0F, Unit.PERCENTAGE);
 		botonEdita.addClickListener(e -> activaFormulario(true));
 
 		// Button : ELIMINAR ELEMENTO
-		botonElimina.setWidth(100.0F, Unit.PERCENTAGE);
+		botonElimina.setDescription("Elimina el elemento seleccionado");
+		botonElimina.setEnabled(false);
 		botonElimina.setIcon(FontAwesome.REMOVE);
 		botonElimina.setStyleName("danger");
-		botonElimina.setEnabled(false);
+		botonElimina.setWidth(100.0F, Unit.PERCENTAGE);
 		botonElimina.addClickListener(e -> this.getUI().getUI().addWindow(creaVentanaConfirmacionBorrado()));
 
 		layoutFormulario = generaLayoutFormulario();
@@ -183,6 +190,7 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 
 	protected Window creaVentanaConfirmacionBorrado() {
 		Window resultado = new Window();
+		resultado.setHeight(ALTO_VENTANA_CONFIRMACION, Unit.PIXELS);
 		resultado.setWidth(ANCHO_VENTANA_CONFIRMACION, Unit.PIXELS);
 		resultado.setModal(true);
 		resultado.setClosable(false);
@@ -205,11 +213,14 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 		layoutBotones.setSpacing(true);
 		layoutBotones.addComponents(botonAceptar, botonCancelar);
 
-		final FormLayout content = new FormLayout();
-		content.setMargin(true);
-		content.addComponents(label, layoutBotones);
-		content.setComponentAlignment(layoutBotones, Alignment.BOTTOM_CENTER);
-		resultado.setContent(content);
+		final VerticalLayout layoutConfirmacion = new VerticalLayout();
+		layoutConfirmacion.setMargin(true);
+		layoutConfirmacion.setSpacing(true);
+		layoutConfirmacion.setSizeFull();
+		layoutConfirmacion.addComponents(label, layoutBotones);
+		layoutConfirmacion.setComponentAlignment(layoutBotones, Alignment.BOTTOM_CENTER);
+
+		resultado.setContent(layoutConfirmacion);
 		resultado.center();
 		return resultado;
 	}

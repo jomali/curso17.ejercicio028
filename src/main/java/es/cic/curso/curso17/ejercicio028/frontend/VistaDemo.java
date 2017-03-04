@@ -34,7 +34,8 @@ public class VistaDemo extends VerticalLayout implements View {
 	public VistaDemo(Navigator navegador) {
 		this.navegador = navegador;
 		servicioEnfermedad = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioEnfermedad.class);
-		servicioTipoMedicamento = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioTipoMedicamento.class);
+		servicioTipoMedicamento = ContextLoader.getCurrentWebApplicationContext()
+				.getBean(ServicioTipoMedicamento.class);
 		servicioMedicamento = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioMedicamento.class);
 	}
 
@@ -55,24 +56,38 @@ public class VistaDemo extends VerticalLayout implements View {
 		if (servicioTipoMedicamento.listaTiposMedicamento().isEmpty()) {
 			TipoMedicamento tipo1 = new TipoMedicamento();
 			tipo1.setNombre("antibiótico");
+			tipo1.setDescripcion(
+					"Fármacos usados generalmente en el tratamiento de infecciones por bacterias, de ahí que también se les conozca como antibacterianos");
 			servicioTipoMedicamento.agregaTipoMedicamento(tipo1);
 			TipoMedicamento tipo2 = new TipoMedicamento();
 			tipo2.setNombre("mucolítico");
+			tipo2.setDescripcion(
+					"Los mucolíticos son sustancias que tienen la capacidad de destruir las distintas estructuras quimicofísicas de la secreción bronquial anormal, consiguiendo una disminución de la viscosidad y, de esta forma, una más fácil y pronta eliminación.");
 			servicioTipoMedicamento.agregaTipoMedicamento(tipo2);
 			TipoMedicamento tipo3 = new TipoMedicamento();
 			tipo3.setNombre("antihistamínico");
+			tipo3.setDescripcion(
+					"Fármacos utilizados para reducir o eliminar los efectos de las alergias, que actúa bloqueando la acción de la histamina en las reacciones alérgicas, a través del bloqueo de sus receptores.");
 			servicioTipoMedicamento.agregaTipoMedicamento(tipo3);
 			TipoMedicamento tipo4 = new TipoMedicamento();
 			tipo4.setNombre("laxante");
+			tipo4.setDescripcion(
+					"Un laxante es una preparación usada para provocar la defecación o la eliminación de heces.");
 			servicioTipoMedicamento.agregaTipoMedicamento(tipo4);
 			TipoMedicamento tipo5 = new TipoMedicamento();
 			tipo5.setNombre("analgésico");
+			tipo5.setDescripcion(
+					"Medicamentos para calmar o eliminar el dolor, ya sea de cabeza, muscular, de artrítis, etc.");
 			servicioTipoMedicamento.agregaTipoMedicamento(tipo5);
 			TipoMedicamento tipo6 = new TipoMedicamento();
 			tipo6.setNombre("broncodilatador");
+			tipo6.setDescripcion(
+					"Medicamentos que causan que los bronquios y bronquiolos de los pulmones se dilaten, provocando una disminución en la resistencia aérea y permitiendo así el flujo de aire.");
 			servicioTipoMedicamento.agregaTipoMedicamento(tipo6);
 			TipoMedicamento tipo7 = new TipoMedicamento();
 			tipo7.setNombre("antiséptico");
+			tipo7.setDescripcion(
+					"Son sustancias antimicrobianas que se aplican a un tejido vivo o sobre la piel para reducir la posibilidad de infección, sepsis o putrefacción.");
 			servicioTipoMedicamento.agregaTipoMedicamento(tipo7);
 
 			servicioMedicamento.agregaMedicamento(new MedicamentoDTO(tipo4, "cacolax"));
@@ -82,7 +97,7 @@ public class VistaDemo extends VerticalLayout implements View {
 			servicioMedicamento.agregaMedicamento(new MedicamentoDTO(tipo5, "sexinononol"));
 			servicioMedicamento.agregaMedicamento(new MedicamentoDTO(null, "requetefortín 2000"));
 		}
-		
+
 		Notification.show("Cargados datos de DEMOSTRACIÓN.", Type.WARNING_MESSAGE);
 		navegador.navigateTo(IUPrincipal.VISTA_ADMINISTRACION);
 	}

@@ -20,6 +20,18 @@
 			</column>
 		</createTable>
 	
+		<createTable catalogName="curso17" tableName="ENFERMEDAD_MEDICAMENTO">
+			<column autoIncrement="true" name="id" type="INT(10)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="id_enfermedad" type="INT(10)">
+				<constraints nullable="false" />
+			</column>
+			<column name="id_medicamento" type="INT(100)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	
 		<createTable catalogName="curso17" tableName="MEDICAMENTO">
 			<column autoIncrement="true" name="id" type="INT(10)">
 				<constraints primaryKey="true" nullable="false" />
@@ -64,6 +76,14 @@
 	
 		<addPrimaryKey constraintName="pk_tratamiento" tableName="TRATAMIENTO"
 			columnNames="id_receta, id_medicamento" />
+			
+		<addForeignKeyConstraint constraintName="fk_enfermedad_medicamento_id_enfermedad"
+			referencedTableName="ENFERMEDAD" referencedColumnNames="id"
+			baseTableName="ENFERMEDAD_MEDICAMENTO" baseColumnNames="id_enfermedad" />
+			
+		<addForeignKeyConstraint constraintName="fk_enfermedad_medicamento_id_medicamento"
+			referencedTableName="MEDICAMENTO" referencedColumnNames="id"
+			baseTableName="ENFERMEDAD_MEDICAMENTO" baseColumnNames="id_medicamento" />
 		
 		<addForeignKeyConstraint constraintName="fk_medicamento_id_tipo_medicamento"
 			referencedTableName="TIPO_MEDICAMENTO" referencedColumnNames="id"
