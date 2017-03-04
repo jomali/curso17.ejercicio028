@@ -1,12 +1,15 @@
 package es.cic.curso.curso17.ejercicio028.frontend.administracion;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.web.context.ContextLoader;
 
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.Page;
+import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
@@ -18,7 +21,9 @@ import com.vaadin.ui.Notification.Type;
 
 import es.cic.curso.curso17.ejercicio028.dto.MedicamentoDTO;
 import es.cic.curso.curso17.ejercicio028.frontend.VistaAdministracion;
+import es.cic.curso.curso17.ejercicio028.modelo.TipoMedicamento;
 import es.cic.curso.curso17.ejercicio028.servicio.ServicioMedicamento;
+import es.cic.curso.curso17.ejercicio028.servicio.ServicioTipoMedicamento;
 
 public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 	private static final long serialVersionUID = -9164756494824050779L;
@@ -26,7 +31,12 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 	/** Lógica de negocio con acceso a BB.DD.: medicamentos */
 	private ServicioMedicamento servicioMedicamento;
 
+	/** Lógica de negocio con acceso a BB.DD.: tipos de medicamento */
+	private ServicioTipoMedicamento servicioTipoMedicamento;
+
 	private TextField textFieldNombre;
+
+	private ComboBox comboBoxTipoMedicamento;
 
 	private TextArea textAreaDescripcion;
 
@@ -35,8 +45,11 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 	public LayoutMedicamentos(VistaAdministracion padre) {
 		super(padre);
 		servicioMedicamento = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioMedicamento.class);
+		servicioTipoMedicamento = ContextLoader.getCurrentWebApplicationContext()
+				.getBean(ServicioTipoMedicamento.class);
+		cargaComboBox();
 	}
-	
+
 	@Override
 	protected String obtenDescripcionElementoSeleccionado() {
 		return elementoSeleccionado.getNombre();
@@ -45,19 +58,10 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 	@Override
 	protected Grid generaGrid() {
 		Grid grid = new Grid();
-		grid.setColumns("nombre");
+		grid.setColumns("nombre", "nombreTipo");
 		grid.addSelectionListener(e -> {
-			if (!e.getSelected().isEmpty()) {
-				elementoSeleccionado = (MedicamentoDTO) e.getSelected().iterator().next();
-				botonAgrega.setEnabled(false);
-				botonEdita.setEnabled(true);
-				botonElimina.setEnabled(true);
-			} else {
-				elementoSeleccionado = null;
-				botonAgrega.setEnabled(true);
-				botonEdita.setEnabled(false);
-				botonElimina.setEnabled(false);
-			}
+			elementoSeleccionado = (e.getSelected().isEmpty()) ? null
+					: (MedicamentoDTO) e.getSelected().iterator().next();
 			cargaFormulario(elementoSeleccionado);
 		});
 
@@ -71,21 +75,33 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 		layoutFormulario.setSpacing(true);
 
 		textFieldNombre = new TextField("Nombre:");
-		textFieldNombre.setSizeFull();
 		textFieldNombre.setInputPrompt("Nombre");
 		textFieldNombre.setRequired(true);
+		textFieldNombre.setSizeFull();
 		textFieldNombre.addTextChangeListener(e -> botonAcepta.setEnabled(true));
 
 		textAreaDescripcion = new TextArea("Descripción:");
+		textAreaDescripcion.setInputPrompt("Descripción");
 		textAreaDescripcion.setRows(5);
 		textAreaDescripcion.setSizeFull();
-		textAreaDescripcion.setInputPrompt("Descripción");
 		textAreaDescripcion.addTextChangeListener(e -> botonAcepta.setEnabled(true));
+
+		comboBoxTipoMedicamento = new ComboBox("Tipo:");
+		comboBoxTipoMedicamento.setFilteringMode(FilteringMode.CONTAINS);
+		comboBoxTipoMedicamento.setInvalidAllowed(false);
+		comboBoxTipoMedicamento.setNullSelectionAllowed(false);
+		comboBoxTipoMedicamento.setPageLength(5);
+		comboBoxTipoMedicamento.setRequired(true);
+		comboBoxTipoMedicamento.setTextInputAllowed(false);
+		comboBoxTipoMedicamento.setWidth(250.0F, Unit.PIXELS);
+		comboBoxTipoMedicamento.addValueChangeListener(e -> botonAcepta.setEnabled(true));
 
 		botonAcepta = new Button("Aceptar");
 		botonAcepta.addClickListener(e -> {
+			TipoMedicamento tipo = (TipoMedicamento) comboBoxTipoMedicamento.getValue();
 			MedicamentoDTO nuevoMedicamento = new MedicamentoDTO();
 			nuevoMedicamento.setNombre(textFieldNombre.getValue());
+			nuevoMedicamento.setTipo(tipo.getId() == -1 ? null : tipo);
 			nuevoMedicamento.setDescripcion(textAreaDescripcion.getValue());
 			activaFormulario(false);
 			// Agregar elemento:
@@ -103,9 +119,9 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 				servicioMedicamento.modificaMedicamento(elementoSeleccionado.getId(), nuevoMedicamento);
 				cargaGrid();
 				elementoSeleccionado = null;
-				botonAgrega.setEnabled(true); // botonAgrega.setEnabled(false);
-				botonEdita.setEnabled(false); // botonEdita.setEnabled(true);
-				botonElimina.setEnabled(false); // botonElimina.setEnabled(true);
+				botonAgrega.setEnabled(true);
+				botonEdita.setEnabled(false);
+				botonElimina.setEnabled(false);
 				new Notification("Entrada modificada: <strong>\"" + nuevoMedicamento.getNombre() + "\"</strong>", "",
 						Type.TRAY_NOTIFICATION, true).show(Page.getCurrent());
 			}
@@ -124,7 +140,10 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 		layoutBotonesFormulario.setSpacing(true);
 		layoutBotonesFormulario.addComponents(botonAcepta, botonCancela);
 
-		layoutFormulario.addComponents(textFieldNombre, textAreaDescripcion, layoutBotonesFormulario);
+		layoutFormulario.addComponent(textFieldNombre);
+		layoutFormulario.addComponent(comboBoxTipoMedicamento);
+		layoutFormulario.addComponent(textAreaDescripcion);
+		layoutFormulario.addComponent(layoutBotonesFormulario);
 		return layoutFormulario;
 	}
 
@@ -143,10 +162,18 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 	protected void cargaFormulario(MedicamentoDTO elemento) {
 		if (elemento == null) {
 			textFieldNombre.clear();
+//			comboBoxTipoMedicamento.setValue(comboBoxTipoMedicamento.getItemIds().iterator().next());
+			cargaComboBox();
 			textAreaDescripcion.clear();
 		} else {
+			TipoMedicamento tipo = elemento.getTipo();
 			String descripcion = elemento.getDescripcion();
 			textFieldNombre.setValue(elemento.getNombre());
+			if (elemento.getTipo() != null) {
+				comboBoxTipoMedicamento.setValue(elemento.getTipo());
+			} else {
+				cargaComboBox();
+			}
 			textAreaDescripcion.setValue(descripcion == null ? "" : descripcion);
 			botonAcepta.setEnabled(false);
 		}
@@ -156,7 +183,13 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 	public void cargaGrid() {
 		Collection<MedicamentoDTO> elementos = servicioMedicamento.listaMedicamentos();
 		grid.setContainerDataSource(new BeanItemContainer<>(MedicamentoDTO.class, elementos));
+	}
 
+	public void cargaComboBox() {
+		List<TipoMedicamento> elementos = servicioTipoMedicamento.listaTiposMedicamentoOrdenada();
+		comboBoxTipoMedicamento.setContainerDataSource(new BeanItemContainer<>(TipoMedicamento.class, elementos));
+		comboBoxTipoMedicamento.setItemCaptionPropertyId("nombre");
+		comboBoxTipoMedicamento.select(elementos.get(0));
 	}
 
 }

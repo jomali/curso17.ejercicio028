@@ -117,9 +117,14 @@ public class VistaAdministracion extends VerticalLayout implements View {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
+		cargaDatos();
+	}
+	
+	public void cargaDatos() {
 		layoutEnfermedades.cargaGrid();
 		layoutTiposMedicamento.cargaGrid();
 		layoutMedicamentos.cargaGrid();
+		layoutMedicamentos.cargaComboBox();
 	}
 
 	public void activaPestannas(boolean activado, Component componenteActual) {

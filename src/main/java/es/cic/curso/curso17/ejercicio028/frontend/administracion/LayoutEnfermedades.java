@@ -47,17 +47,8 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		Grid grid = new Grid();
 		grid.setColumns("nombre");
 		grid.addSelectionListener(e -> {
-			if (!e.getSelected().isEmpty()) {
-				elementoSeleccionado = (EnfermedadDTO) e.getSelected().iterator().next();
-				botonAgrega.setEnabled(false);
-				botonEdita.setEnabled(true);
-				botonElimina.setEnabled(true);
-			} else {
-				elementoSeleccionado = null;
-				botonAgrega.setEnabled(true);
-				botonEdita.setEnabled(false);
-				botonElimina.setEnabled(false);
-			}
+			elementoSeleccionado = (e.getSelected().isEmpty()) ? null
+					: (EnfermedadDTO) e.getSelected().iterator().next();
 			cargaFormulario(elementoSeleccionado);
 		});
 

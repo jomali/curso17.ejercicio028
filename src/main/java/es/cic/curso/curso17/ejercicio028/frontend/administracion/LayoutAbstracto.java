@@ -30,7 +30,10 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 	protected K elementoSeleccionado;
 
 	/** Campo de texto para el filtro de la tabla. */
-	protected TextField textFieldFiltro = new TextField();
+	protected TextField textFieldFiltro;
+	
+	/** Botón para acción: cancelar selección */
+	protected Button botonLimpiaSeleccion;
 
 	/** Tabla con datos de BB.DD. */
 	protected Grid grid = new Grid();
@@ -54,7 +57,7 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 
 		HorizontalSplitPanel splitPanelPrincipal = new HorizontalSplitPanel();
 		splitPanelPrincipal.setSplitPosition(30.0F, Unit.PERCENTAGE);
-		splitPanelPrincipal.setMinSplitPosition(224.0F, Unit.PIXELS);
+		splitPanelPrincipal.setMinSplitPosition(250.0F, Unit.PIXELS); // 224
 		splitPanelPrincipal.setMaxSplitPosition(70.0F, Unit.PERCENTAGE);
 		splitPanelPrincipal.setLocked(false);
 		splitPanelPrincipal.setFirstComponent(generaLayoutTabla());
@@ -78,19 +81,47 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 		layoutFiltro.setSpacing(true);
 
 		// TextField : FILTRO
+		textFieldFiltro = new TextField();
 		textFieldFiltro.setInputPrompt("Buscar...");
+		textFieldFiltro.addTextChangeListener(e -> {
+			botonLimpiaSeleccion.setEnabled(true);
+		});
 
-		// Button : LIMPIAR
-		Button botonLimpia = new Button();
-		botonLimpia.setIcon(FontAwesome.ERASER);
-		botonLimpia.setVisible(false);
+		// Button : LIMPIAR SELECCIÓN
+		botonLimpiaSeleccion = new Button();
+		botonLimpiaSeleccion.setEnabled(false);
+		botonLimpiaSeleccion.setIcon(FontAwesome.ERASER);
+		botonLimpiaSeleccion.addClickListener(e -> {
+			botonAgrega.setEnabled(true);
+			botonEdita.setEnabled(false);
+			botonElimina.setEnabled(false);
+			textFieldFiltro.clear();
+			botonLimpiaSeleccion.setEnabled(false);
+			grid.deselectAll();
+			elementoSeleccionado = null;
+			cargaFormulario(elementoSeleccionado);
+		});
 
 		// Grid : GRID
 		grid = generaGrid();
 		grid.setSizeFull();
 		grid.setSelectionMode(SelectionMode.SINGLE);
+		grid.addSelectionListener(e -> {
+			if (!e.getSelected().isEmpty()) {
+				botonLimpiaSeleccion.setEnabled(true);
+				botonAgrega.setEnabled(false);
+				botonEdita.setEnabled(true);
+				botonElimina.setEnabled(true);
+			} else {
+				botonLimpiaSeleccion.setEnabled(false);
+				elementoSeleccionado = null;
+				botonAgrega.setEnabled(true);
+				botonEdita.setEnabled(false);
+				botonElimina.setEnabled(false);
+			}
+		});
 
-		layoutFiltro.addComponents(textFieldFiltro, botonLimpia);
+		layoutFiltro.addComponents(textFieldFiltro, botonLimpiaSeleccion);
 		layoutTabla.addComponents(layoutFiltro, grid);
 		layoutTabla.setComponentAlignment(layoutFiltro, Alignment.TOP_RIGHT);
 
@@ -111,6 +142,7 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 		// Button : AÑADIR ELEMENTO
 		botonAgrega.setWidth(100.0F, Unit.PERCENTAGE);
 		botonAgrega.setIcon(FontAwesome.PLUS);
+//		botonAgrega.setStyleName("primary");
 		botonAgrega.addClickListener(e -> activaFormulario(true));
 
 		// Button : EDITAR ELEMENTO
@@ -122,6 +154,7 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 		// Button : ELIMINAR ELEMENTO
 		botonElimina.setWidth(100.0F, Unit.PERCENTAGE);
 		botonElimina.setIcon(FontAwesome.REMOVE);
+		botonElimina.setStyleName("danger");
 		botonElimina.setEnabled(false);
 		botonElimina.addClickListener(e -> this.getUI().getUI().addWindow(creaVentanaConfirmacionBorrado()));
 
@@ -143,6 +176,7 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 		botonElimina.setEnabled(!activado);
 		padre.activaPestannas(!activado, this);
 		textFieldFiltro.setEnabled(!activado);
+		botonLimpiaSeleccion.setEnabled(!activado);
 		grid.setEnabled(!activado);
 		layoutFormulario.setEnabled(activado);
 	}
@@ -169,12 +203,12 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 		HorizontalLayout layoutBotones = new HorizontalLayout();
 		layoutBotones.setMargin(true);
 		layoutBotones.setSpacing(true);
-		layoutBotones.setWidth(100.0F, Unit.PERCENTAGE);
 		layoutBotones.addComponents(botonAceptar, botonCancelar);
 
 		final FormLayout content = new FormLayout();
 		content.setMargin(true);
 		content.addComponents(label, layoutBotones);
+		content.setComponentAlignment(layoutBotones, Alignment.BOTTOM_CENTER);
 		resultado.setContent(content);
 		resultado.center();
 		return resultado;

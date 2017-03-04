@@ -37,7 +37,7 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 		servicioTipoMedicamento = ContextLoader.getCurrentWebApplicationContext()
 				.getBean(ServicioTipoMedicamento.class);
 	}
-	
+
 	@Override
 	protected String obtenDescripcionElementoSeleccionado() {
 		return elementoSeleccionado.getNombre();
@@ -48,17 +48,8 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 		Grid grid = new Grid();
 		grid.setColumns("nombre");
 		grid.addSelectionListener(e -> {
-			if (!e.getSelected().isEmpty()) {
-				elementoSeleccionado = (TipoMedicamento) e.getSelected().iterator().next();
-				botonAgrega.setEnabled(false);
-				botonEdita.setEnabled(true);
-				botonElimina.setEnabled(true);
-			} else {
-				elementoSeleccionado = null;
-				botonAgrega.setEnabled(true);
-				botonEdita.setEnabled(false);
-				botonElimina.setEnabled(false);
-			}
+			elementoSeleccionado = (e.getSelected().isEmpty()) ? null
+					: (TipoMedicamento) e.getSelected().iterator().next();
 			cargaFormulario(elementoSeleccionado);
 		});
 
@@ -103,7 +94,6 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 			// Agregar elemento:
 			if (elementoSeleccionado == null) {
 				servicioTipoMedicamento.agregaTipoMedicamento(nuevoTipo);
-				cargaGrid();
 				botonAgrega.setEnabled(true);
 				botonEdita.setEnabled(false);
 				botonElimina.setEnabled(false);
@@ -113,7 +103,6 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 			// Editar elemento:
 			else {
 				servicioTipoMedicamento.modificaTipoMedicamento(elementoSeleccionado.getId(), nuevoTipo);
-				cargaGrid();
 				elementoSeleccionado = null;
 				botonAgrega.setEnabled(true);
 				botonEdita.setEnabled(false);
@@ -121,6 +110,7 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 				new Notification("Entrada modificada: <strong>\"" + nuevoTipo.getNombre() + "\"</strong>", "",
 						Type.TRAY_NOTIFICATION, true).show(Page.getCurrent());
 			}
+			padre.cargaDatos();
 			cargaFormulario(elementoSeleccionado);
 		});
 		Button botonCancela = new Button("Cancelar");

@@ -51,5 +51,15 @@ public class ServicioTipoMedicamentoImpl implements ServicioTipoMedicamento {
 	public List<TipoMedicamento> listaTiposMedicamento() {
 		return repositorioTipoMedicamento.list();
 	}
+	
+	@Override
+	public List<TipoMedicamento> listaTiposMedicamentoOrdenada() {
+		List<TipoMedicamento> resultado = repositorioTipoMedicamento.listInOrder();
+		TipoMedicamento tipoVacio = new TipoMedicamento();
+		tipoVacio.setNombre("-- General --");
+		tipoVacio.setId(-1L);
+		resultado.add(0, tipoVacio);
+		return resultado;
+	}
 
 }

@@ -15,5 +15,7 @@ public interface ServicioTipoMedicamento {
 	TipoMedicamento eliminaTipoMedicamento(Long id);
 
 	List<TipoMedicamento> listaTiposMedicamento();
+	
+	List<TipoMedicamento> listaTiposMedicamentoOrdenada();
 
 }
