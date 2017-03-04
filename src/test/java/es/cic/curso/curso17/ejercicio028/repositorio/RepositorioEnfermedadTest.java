@@ -18,8 +18,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.cic.curso.curso17.ejercicio028.modelo.Medicamento;
-import es.cic.curso.curso17.ejercicio028.modelo.TipoMedicamento;
+import es.cic.curso.curso17.ejercicio028.modelo.Enfermedad;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:es/cic/curso/curso17/ejercicio028/applicationContext.xml" })
@@ -30,52 +29,40 @@ public class RepositorioEnfermedadTest {
 	public static final int NUMERO_ELEMENTOS = 100;
 
 	@Autowired
-	private RepositorioMedicamento sut;
+	private RepositorioEnfermedad sut;
 
 	@PersistenceContext
 	protected EntityManager em;
-	
-	private TipoMedicamento generaSubElementoPrueba() {
-		TipoMedicamento subElemento = new TipoMedicamento();
-		subElemento.setNombre("tipo medicamento");
-		subElemento.setDescripcion("descripción del tipo de medicamento");
-		em.persist(subElemento);
-		em.flush();
-		return subElemento;
-	}
 
-	private Medicamento generaElementoPrueba() {
-		Medicamento elemento = new Medicamento();
-		elemento.setTipo(generaSubElementoPrueba());
-		elemento.setNombre("medicamento");
-		elemento.setDescripcion("descripción del medicamento");
+	private Enfermedad generaElementoPrueba() {
+		Enfermedad elemento = new Enfermedad();
+		elemento.setNombre("enfermedad");
+		elemento.setCie10("U00-U99");
+		elemento.setDescripcion("descripción de la enfermedad");
 		em.persist(elemento);
 		em.flush();
 		return elemento;
 	}
 
 	@Test
-	public void testCreate() {
-		Medicamento elemento;
-		
-		// 1) Medicamento con tipo vacío
-		elemento  = new Medicamento();
-		elemento.setNombre("medicamento");
+	public void testCreate() {		
+		Enfermedad elemento  = new Enfermedad();
+		elemento.setNombre("enfermedad");
+		elemento.setCie10("U00-U99");
 		sut.create(elemento);
 		assertNotNull(elemento.getId());
-		assertNull(elemento.getTipo());
 	}
 
 	@Test
 	public void testRead() {
-		Medicamento elemento1 = generaElementoPrueba();
-		Medicamento elemento2 = sut.read(elemento1.getId());
+		Enfermedad elemento1 = generaElementoPrueba();
+		Enfermedad elemento2 = sut.read(elemento1.getId());
 
 		assertTrue(elemento1.getId().equals(elemento2.getId()));
 
 		try {
 			@SuppressWarnings("unused")
-			Medicamento elemento3 = sut.read(Long.MIN_VALUE);
+			Enfermedad elemento3 = sut.read(Long.MIN_VALUE);
 			fail("No deberían existir elementos con el ID pasado");
 		} catch (PersistenceException pe) {
 
@@ -84,23 +71,23 @@ public class RepositorioEnfermedadTest {
 
 	@Test
 	public void testUpdate() {
-		Medicamento original = generaElementoPrueba();
-		Medicamento clon = original.clone();
+		Enfermedad original = generaElementoPrueba();
+		Enfermedad clon = original.clone();
 
 		original.setNombre("Modificado");
 		sut.update(original);
 
-		Medicamento modificado = sut.read(original.getId());
+		Enfermedad modificado = sut.read(original.getId());
 		assertTrue(original.getNombre().equals(modificado.getNombre()));
 		assertFalse(clon.getNombre().equals(modificado.getNombre()));
 	}
 
 	@Test
 	public void testDelete() {
-		Medicamento elemento = generaElementoPrueba();
+		Enfermedad elemento = generaElementoPrueba();
 		sut.delete(elemento.getId());
 
-		Medicamento resultado = sut.read(elemento.getId());
+		Enfermedad resultado = sut.read(elemento.getId());
 		assertNull(resultado);
 	}
 
@@ -110,7 +97,7 @@ public class RepositorioEnfermedadTest {
 			generaElementoPrueba();
 		}
 
-		List<Medicamento> lista = sut.list();
+		List<Enfermedad> lista = sut.list();
 		assertEquals(NUMERO_ELEMENTOS, lista.size());
 	}
 

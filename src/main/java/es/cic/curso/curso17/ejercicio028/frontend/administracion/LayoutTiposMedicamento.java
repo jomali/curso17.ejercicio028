@@ -22,6 +22,8 @@ import es.cic.curso.curso17.ejercicio028.servicio.ServicioTipoMedicamento;
 
 public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 	private static final long serialVersionUID = 514378371321635909L;
+	
+	public static final float POSICION_DIVISOR = 30.0F;
 
 	/** Lógica de negocio con acceso a BB.DD.: tipos de medicamento */
 	private ServicioTipoMedicamento servicioTipoMedicamento;
@@ -33,7 +35,7 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 	private Button botonAcepta;
 
 	public LayoutTiposMedicamento(VistaAdministracion padre) {
-		super(padre);
+		super(padre, POSICION_DIVISOR);
 		servicioTipoMedicamento = ContextLoader.getCurrentWebApplicationContext()
 				.getBean(ServicioTipoMedicamento.class);
 	}

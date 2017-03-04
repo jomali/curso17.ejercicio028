@@ -28,6 +28,8 @@ import es.cic.curso.curso17.ejercicio028.servicio.ServicioTipoMedicamento;
 public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 	private static final long serialVersionUID = -9164756494824050779L;
 
+	public static final float POSICION_DIVISOR = 35.0F;
+
 	/** Lógica de negocio con acceso a BB.DD.: medicamentos */
 	private ServicioMedicamento servicioMedicamento;
 
@@ -43,7 +45,7 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 	private Button botonAcepta;
 
 	public LayoutMedicamentos(VistaAdministracion padre) {
-		super(padre);
+		super(padre, POSICION_DIVISOR);
 		servicioMedicamento = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioMedicamento.class);
 		servicioTipoMedicamento = ContextLoader.getCurrentWebApplicationContext()
 				.getBean(ServicioTipoMedicamento.class);
@@ -162,11 +164,9 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 	protected void cargaFormulario(MedicamentoDTO elemento) {
 		if (elemento == null) {
 			textFieldNombre.clear();
-//			comboBoxTipoMedicamento.setValue(comboBoxTipoMedicamento.getItemIds().iterator().next());
 			cargaComboBox();
 			textAreaDescripcion.clear();
 		} else {
-			TipoMedicamento tipo = elemento.getTipo();
 			String descripcion = elemento.getDescripcion();
 			textFieldNombre.setValue(elemento.getNombre());
 			if (elemento.getTipo() != null) {

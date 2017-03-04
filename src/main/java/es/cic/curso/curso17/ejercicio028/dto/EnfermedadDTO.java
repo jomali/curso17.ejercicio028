@@ -8,6 +8,9 @@ public class EnfermedadDTO {
 	/** Nombre de la enfermedad. */
 	private String nombre;
 
+	/** Clasificación internacional de enfermedades. 10ed. */
+	private String cie10;
+
 	/** Descripción de la enfermedad. */
 	private String descripcion;
 
@@ -19,12 +22,14 @@ public class EnfermedadDTO {
 	}
 
 	/**
-	 * Constructor. Crea un nuevo objeto con el nombre pasado como parámetro.
+	 * Constructor. Crea un nuevo objeto a partir de los parámetros dados.
 	 * 
 	 * @param nombre
+	 * @param cie10
 	 */
-	public EnfermedadDTO(String nombre) {
+	public EnfermedadDTO(String nombre, String cie10) {
 		this.nombre = nombre;
+		this.cie10 = cie10;
 	}
 
 	/**
@@ -39,6 +44,13 @@ public class EnfermedadDTO {
 	 */
 	public String getNombre() {
 		return nombre;
+	}
+
+	/**
+	 * @return the cie10
+	 */
+	public String getCie10() {
+		return cie10;
 	}
 
 	/**
@@ -62,6 +74,14 @@ public class EnfermedadDTO {
 	 */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+
+	/**
+	 * @param cie10
+	 *            the cie10 to set
+	 */
+	public void setCie10(String cie10) {
+		this.cie10 = cie10;
 	}
 
 	/**
@@ -99,7 +119,8 @@ public class EnfermedadDTO {
 
 	@Override
 	public String toString() {
-		return "EnfermedadDTO [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + "]";
+		return "EnfermedadDTO [id=" + id + ", nombre=" + nombre + ", CIE-10=" + cie10 + ", descripcion=" + descripcion
+				+ "]";
 	}
 
 }

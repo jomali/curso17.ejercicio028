@@ -21,6 +21,10 @@ public class Enfermedad implements Cloneable, Identificable<Long> {
 	@Column(name = "nombre")
 	private String nombre;
 
+	/** Clasificación internacional de enfermedades. 10ed. */
+	@Column(name = "cie_10")
+	private String cie10;
+
 	/** Descripción de la enfermedad. */
 	@Column(name = "descripcion")
 	private String descripcion;
@@ -38,6 +42,13 @@ public class Enfermedad implements Cloneable, Identificable<Long> {
 	 */
 	public String getNombre() {
 		return nombre;
+	}
+
+	/**
+	 * @return the cie10
+	 */
+	public String getCie10() {
+		return cie10;
 	}
 
 	/**
@@ -62,6 +73,14 @@ public class Enfermedad implements Cloneable, Identificable<Long> {
 	 */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+
+	/**
+	 * @param cie10
+	 *            the cie10 to set
+	 */
+	public void setCie10(String cie10) {
+		this.cie10 = cie10;
 	}
 
 	/**
@@ -105,7 +124,8 @@ public class Enfermedad implements Cloneable, Identificable<Long> {
 
 	@Override
 	public String toString() {
-		return "Enfermedad [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + "]";
+		return "Enfermedad [id=" + id + ", nombre=" + nombre + ", cie10=" + cie10 + ", descripcion=" + descripcion
+				+ "]";
 	}
 
 	@Override
@@ -113,6 +133,7 @@ public class Enfermedad implements Cloneable, Identificable<Long> {
 		Enfermedad clon = new Enfermedad();
 		clon.id = id;
 		clon.nombre = nombre;
+		clon.cie10 = cie10;
 		clon.descripcion = descripcion;
 		return clon;
 	}

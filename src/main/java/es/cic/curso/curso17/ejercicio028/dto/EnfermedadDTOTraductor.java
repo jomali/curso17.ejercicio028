@@ -15,6 +15,7 @@ public class EnfermedadDTOTraductor implements Traductor<Enfermedad, EnfermedadD
 		EnfermedadDTO resultado = new EnfermedadDTO();
 		resultado.setId(entidad.getId());
 		resultado.setNombre(entidad.getNombre());
+		resultado.setCie10(entidad.getCie10());
 		resultado.setDescripcion(entidad.getDescripcion());
 		return resultado;
 	}
@@ -24,6 +25,7 @@ public class EnfermedadDTOTraductor implements Traductor<Enfermedad, EnfermedadD
 		Enfermedad resultado = new Enfermedad();
 		resultado.setId(dto.getId());
 		resultado.setNombre(dto.getNombre());
+		resultado.setCie10(dto.getCie10());
 		resultado.setDescripcion(dto.getDescripcion());
 		return resultado;
 	}

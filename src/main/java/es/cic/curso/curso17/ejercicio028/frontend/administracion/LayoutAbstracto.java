@@ -50,13 +50,13 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 	/** Formulario. */
 	protected FormLayout layoutFormulario = new FormLayout();
 
-	public LayoutAbstracto(VistaAdministracion padre) {
+	public LayoutAbstracto(VistaAdministracion padre, float posicionDivisor) {
 		this.padre = padre;
 		setMargin(new MarginInfo(true, false, false, false));
 		setSpacing(false);
 
 		HorizontalSplitPanel splitPanelPrincipal = new HorizontalSplitPanel();
-		splitPanelPrincipal.setSplitPosition(30.0F, Unit.PERCENTAGE);
+		splitPanelPrincipal.setSplitPosition(posicionDivisor, Unit.PERCENTAGE);
 		splitPanelPrincipal.setMinSplitPosition(250.0F, Unit.PIXELS); // 224
 		splitPanelPrincipal.setMaxSplitPosition(70.0F, Unit.PERCENTAGE);
 		splitPanelPrincipal.setLocked(false);

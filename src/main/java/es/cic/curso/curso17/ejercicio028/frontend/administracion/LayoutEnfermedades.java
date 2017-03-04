@@ -22,18 +22,22 @@ import es.cic.curso.curso17.ejercicio028.servicio.ServicioEnfermedad;
 
 public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 	private static final long serialVersionUID = 6467264543844871753L;
+	
+	public static final float POSICION_DIVISOR = 35.0F;
 
 	/** Lógica de negocio con acceso a BB.DD.: enfermedades */
 	private ServicioEnfermedad servicioEnfermedad;
 
 	private TextField textFieldNombre;
 
+	private TextField textFieldCie10;
+	
 	private TextArea textAreaDescripcion;
 
 	private Button botonAcepta;
 
 	public LayoutEnfermedades(VistaAdministracion padre) {
-		super(padre);
+		super(padre, POSICION_DIVISOR);
 		servicioEnfermedad = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioEnfermedad.class);
 	}
 	
@@ -45,7 +49,7 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 	@Override
 	protected Grid generaGrid() {
 		Grid grid = new Grid();
-		grid.setColumns("nombre");
+		grid.setColumns("nombre", "cie10");
 		grid.addSelectionListener(e -> {
 			elementoSeleccionado = (e.getSelected().isEmpty()) ? null
 					: (EnfermedadDTO) e.getSelected().iterator().next();
@@ -66,6 +70,12 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		textFieldNombre.setInputPrompt("Nombre");
 		textFieldNombre.setRequired(true);
 		textFieldNombre.addTextChangeListener(e -> botonAcepta.setEnabled(true));
+		
+		textFieldCie10 = new TextField("CIE-10:");
+		textFieldCie10.setInputPrompt("Código CIE-10");
+		textFieldCie10.setRequired(true);
+		textFieldCie10.setSizeFull();
+		textFieldCie10.addTextChangeListener(e -> botonAcepta.setEnabled(true));
 
 		textAreaDescripcion = new TextArea("Descripción:");
 		textAreaDescripcion.setRows(5);
@@ -77,6 +87,7 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		botonAcepta.addClickListener(e -> {
 			EnfermedadDTO nuevaEnfermedad = new EnfermedadDTO();
 			nuevaEnfermedad.setNombre(textFieldNombre.getValue());
+			nuevaEnfermedad.setCie10(textFieldCie10.getValue());
 			nuevaEnfermedad.setDescripcion(textAreaDescripcion.getValue());
 			activaFormulario(false);
 			// Agregar elemento:
@@ -115,7 +126,10 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		layoutBotonesFormulario.setSpacing(true);
 		layoutBotonesFormulario.addComponents(botonAcepta, botonCancela);
 
-		layoutFormulario.addComponents(textFieldNombre, textAreaDescripcion, layoutBotonesFormulario);
+		layoutFormulario.addComponent(textFieldNombre);
+		layoutFormulario.addComponent(textFieldCie10);
+		layoutFormulario.addComponent(textAreaDescripcion);
+		layoutFormulario.addComponent(layoutBotonesFormulario);
 		return layoutFormulario;
 	}
 
@@ -134,11 +148,12 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 	protected void cargaFormulario(EnfermedadDTO elemento) {
 		if (elemento == null) {
 			textFieldNombre.clear();
+			textFieldCie10.clear();
 			textAreaDescripcion.clear();
 		} else {
-			String descripcion = elemento.getDescripcion();
 			textFieldNombre.setValue(elemento.getNombre());
-			textAreaDescripcion.setValue(descripcion == null ? "" : descripcion);
+			textFieldCie10.setValue(elemento.getCie10());
+			textAreaDescripcion.setValue(elemento.getDescripcion() == null ? "" : elemento.getDescripcion());
 			botonAcepta.setEnabled(false);
 		}
 	}

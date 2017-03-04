@@ -12,7 +12,10 @@
 			<column name="nombre" type="VARCHAR(100)">
 				<constraints nullable="false" />
 			</column>
-			<column name="descripcion" type="VARCHAR(100)">
+			<column name="cie_10" type="VARCHAR(100)">
+				<constraints nullable="false" />
+			</column>
+			<column name="descripcion" type="VARCHAR(255)">
 				<constraints nullable="true" />
 			</column>
 		</createTable>
@@ -27,7 +30,7 @@
 			<column name="nombre" type="VARCHAR(100)">
 				<constraints nullable="false" />
 			</column>
-			<column name="descripcion" type="VARCHAR(100)">
+			<column name="descripcion" type="VARCHAR(255)">
 				<constraints nullable="true" />
 			</column>
 		</createTable>
@@ -39,7 +42,7 @@
 			<column name="nombre" type="VARCHAR(100)">
 				<constraints nullable="false" />
 			</column>
-			<column name="descripcion" type="VARCHAR(100)">
+			<column name="descripcion" type="VARCHAR(255)">
 				<constraints nullable="true" />
 			</column>
 		</createTable>
