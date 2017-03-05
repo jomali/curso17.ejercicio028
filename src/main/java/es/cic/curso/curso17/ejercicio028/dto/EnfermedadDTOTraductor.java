@@ -9,7 +9,7 @@ import es.cic.curso.curso17.ejercicio028.modelo.Enfermedad;
 
 @Service
 public class EnfermedadDTOTraductor implements Traductor<Enfermedad, EnfermedadDTO> {
-
+	
 	@Override
 	public EnfermedadDTO traduceADTO(Enfermedad entidad) {
 		EnfermedadDTO resultado = new EnfermedadDTO();

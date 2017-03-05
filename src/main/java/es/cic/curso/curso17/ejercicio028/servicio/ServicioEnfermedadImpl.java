@@ -24,8 +24,8 @@ public class ServicioEnfermedadImpl implements ServicioEnfermedad {
 	private EnfermedadDTOTraductor traductor;
 
 	@Override
-	public void agregaEnfermedad(EnfermedadDTO enfermedad) {
-		repositorioEnfermedad.create(traductor.traduceAEntidad(enfermedad));
+	public Long agregaEnfermedad(EnfermedadDTO enfermedad) {
+		return repositorioEnfermedad.create(traductor.traduceAEntidad(enfermedad)).getId();
 	}
 
 	@Override

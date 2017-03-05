@@ -6,7 +6,7 @@ import es.cic.curso.curso17.ejercicio028.dto.EnfermedadDTO;
 
 public interface ServicioEnfermedad {
 
-	void agregaEnfermedad(EnfermedadDTO enfermedad);
+	Long agregaEnfermedad(EnfermedadDTO enfermedad);
 
 	EnfermedadDTO obtenEnfermedad(Long id);
 

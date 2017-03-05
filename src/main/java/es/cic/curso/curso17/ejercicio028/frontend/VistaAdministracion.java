@@ -126,6 +126,10 @@ public class VistaAdministracion extends VerticalLayout implements View {
 		layoutMedicamentos.cargaGrid();
 		layoutMedicamentos.cargaComboBox();
 	}
+	
+	public void refrescaDatos() {
+		layoutEnfermedades.refrescaDatos();
+	}
 
 	public void activaPestannas(boolean activado, Component componenteActual) {
 		this.componenteActual = componenteActual;

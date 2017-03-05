@@ -99,6 +99,7 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 		comboBoxTipoMedicamento.addValueChangeListener(e -> botonAcepta.setEnabled(true));
 
 		botonAcepta = new Button("Aceptar");
+		botonAcepta.setEnabled(false);
 		botonAcepta.addClickListener(e -> {
 			TipoMedicamento tipo = (TipoMedicamento) comboBoxTipoMedicamento.getValue();
 			MedicamentoDTO nuevoMedicamento = new MedicamentoDTO();
@@ -140,7 +141,8 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 
 		HorizontalLayout layoutBotonesFormulario = new HorizontalLayout();
 		layoutBotonesFormulario.setSpacing(true);
-		layoutBotonesFormulario.addComponents(botonAcepta, botonCancela);
+		layoutBotonesFormulario.addComponents(botonAcepta);
+		layoutBotonesFormulario.addComponents(botonCancela);
 
 		layoutFormulario.addComponent(textFieldNombre);
 		layoutFormulario.addComponent(comboBoxTipoMedicamento);
@@ -153,9 +155,13 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 	protected Button generaBotonAceptarVentanaConfirmacionBorrado(Window ventana) {
 		Button botonAceptar = new Button("Aceptar");
 		botonAceptar.addClickListener(e -> {
+			String nombre = elementoSeleccionado.getNombre();
 			servicioMedicamento.eliminaMedicamento(elementoSeleccionado.getId());
+			padre.refrescaDatos();
 			cargaGrid();
 			ventana.close();
+			new Notification("Entrada eliminada: <strong>\"" + nombre + "\"</strong>", "", Type.TRAY_NOTIFICATION, true)
+					.show(Page.getCurrent());
 		});
 		return botonAceptar;
 	}
@@ -175,8 +181,8 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 				cargaComboBox();
 			}
 			textAreaDescripcion.setValue(descripcion == null ? "" : descripcion);
-			botonAcepta.setEnabled(false);
 		}
+		botonAcepta.setEnabled(false);
 	}
 
 	@Override
@@ -190,6 +196,7 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 		comboBoxTipoMedicamento.setContainerDataSource(new BeanItemContainer<>(TipoMedicamento.class, elementos));
 		comboBoxTipoMedicamento.setItemCaptionPropertyId("nombre");
 		comboBoxTipoMedicamento.select(elementos.get(0));
+		botonAcepta.setEnabled(false);
 	}
 
 }

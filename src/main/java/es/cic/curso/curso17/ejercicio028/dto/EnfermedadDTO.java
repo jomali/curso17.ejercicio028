@@ -27,9 +27,11 @@ public class EnfermedadDTO {
 	 * @param nombre
 	 * @param cie10
 	 */
-	public EnfermedadDTO(String nombre, String cie10) {
+	public EnfermedadDTO(String nombre, String cie10, String descripcion) {
+		this();
 		this.nombre = nombre;
 		this.cie10 = cie10;
+		this.descripcion = descripcion;
 	}
 
 	/**

@@ -44,12 +44,12 @@ public class VistaDemo extends VerticalLayout implements View {
 
 		// Inicialización de enfermedades
 		if (servicioEnfermedad.listaEnfermedades().isEmpty()) {
-			servicioEnfermedad.agregaEnfermedad(new EnfermedadDTO("lupus eritematoso sistémico", "M32"));
-			servicioEnfermedad.agregaEnfermedad(new EnfermedadDTO("sarampión", "B05"));
-			servicioEnfermedad.agregaEnfermedad(new EnfermedadDTO("tripanosomiasis africana", "B56; B50"));
-			servicioEnfermedad.agregaEnfermedad(new EnfermedadDTO("osteomielitis", "M86"));
-			servicioEnfermedad.agregaEnfermedad(new EnfermedadDTO("fascitis", "M72.9"));
-			servicioEnfermedad.agregaEnfermedad(new EnfermedadDTO("porfiria", "E80.0; E80.2"));
+			servicioEnfermedad.agregaEnfermedad(new EnfermedadDTO("lupus eritematoso sistémico", "M32", ""));
+			servicioEnfermedad.agregaEnfermedad(new EnfermedadDTO("sarampión", "B05", ""));
+			servicioEnfermedad.agregaEnfermedad(new EnfermedadDTO("tripanosomiasis africana", "B56; B50", ""));
+			servicioEnfermedad.agregaEnfermedad(new EnfermedadDTO("osteomielitis", "M86", ""));
+			servicioEnfermedad.agregaEnfermedad(new EnfermedadDTO("fascitis", "M72.9", ""));
+			servicioEnfermedad.agregaEnfermedad(new EnfermedadDTO("porfiria", "E80.0; E80.2", ""));
 		}
 
 		// Inicialización de tipos de medicamento

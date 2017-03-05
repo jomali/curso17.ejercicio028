@@ -79,11 +79,13 @@
 			
 		<addForeignKeyConstraint constraintName="fk_enfermedad_medicamento_id_enfermedad"
 			referencedTableName="ENFERMEDAD" referencedColumnNames="id"
-			baseTableName="ENFERMEDAD_MEDICAMENTO" baseColumnNames="id_enfermedad" />
+			baseTableName="ENFERMEDAD_MEDICAMENTO" baseColumnNames="id_enfermedad" 
+			onDelete="CASCADE" />
 			
 		<addForeignKeyConstraint constraintName="fk_enfermedad_medicamento_id_medicamento"
 			referencedTableName="MEDICAMENTO" referencedColumnNames="id"
-			baseTableName="ENFERMEDAD_MEDICAMENTO" baseColumnNames="id_medicamento" />
+			baseTableName="ENFERMEDAD_MEDICAMENTO" baseColumnNames="id_medicamento" 
+			onDelete="CASCADE" />
 		
 		<addForeignKeyConstraint constraintName="fk_medicamento_id_tipo_medicamento"
 			referencedTableName="TIPO_MEDICAMENTO" referencedColumnNames="id"

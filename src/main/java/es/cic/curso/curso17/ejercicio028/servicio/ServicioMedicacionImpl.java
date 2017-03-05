@@ -7,16 +7,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.cic.curso.curso17.ejercicio028.dto.MedicamentoDTO;
+import es.cic.curso.curso17.ejercicio028.dto.MedicamentoDTOTraductor;
 import es.cic.curso.curso17.ejercicio028.modelo.Enfermedad;
-import es.cic.curso.curso17.ejercicio028.modelo.EnfermedadMedicamento;
+import es.cic.curso.curso17.ejercicio028.modelo.Medicacion;
 import es.cic.curso.curso17.ejercicio028.modelo.Medicamento;
 import es.cic.curso.curso17.ejercicio028.repositorio.RepositorioEnfermedad;
-import es.cic.curso.curso17.ejercicio028.repositorio.RepositorioEnfermedadMedicamento;
+import es.cic.curso.curso17.ejercicio028.repositorio.RepositorioMedicacion;
 import es.cic.curso.curso17.ejercicio028.repositorio.RepositorioMedicamento;
 
 @Service
 @Transactional
-public class ServicioEnfermedadMedicamentoImpl implements ServicioEnfermedadMedicamento {
+public class ServicioMedicacionImpl implements ServicioMedicacion {
 
 	private static final String ERROR_ID = "No existe ningún registro en BB.DD. con ese ID";
 
@@ -27,7 +28,10 @@ public class ServicioEnfermedadMedicamentoImpl implements ServicioEnfermedadMedi
 	private RepositorioMedicamento repositorioMedicamento;
 
 	@Autowired
-	private RepositorioEnfermedadMedicamento repositorioEnfermedadMedicamento;
+	private RepositorioMedicacion repositorioMedicacion;
+
+	@Autowired
+	private MedicamentoDTOTraductor traductor;
 
 	private Enfermedad obtenEnfermedad(Long id) {
 		Enfermedad enfermedad = repositorioEnfermedad.read(id);
@@ -44,29 +48,31 @@ public class ServicioEnfermedadMedicamentoImpl implements ServicioEnfermedadMedi
 		}
 		return medicamento;
 	}
-	
+
 	@Override
-	public void agregaPorEnfermedad(Long idEnfermedad, MedicamentoDTO ... dtos) {
+	public void agregaPorEnfermedad(Long idEnfermedad, List<MedicamentoDTO> dtos) {
 		Enfermedad enfermedad = obtenEnfermedad(idEnfermedad);
 		for (MedicamentoDTO dto : dtos) {
 			Medicamento medicamento = obtenMedicamento(dto);
-			EnfermedadMedicamento entrada = new EnfermedadMedicamento();
+			Medicacion entrada = new Medicacion();
 			entrada.setEnfermedad(enfermedad);
 			entrada.setMedicamento(medicamento);
-			repositorioEnfermedadMedicamento.create(entrada);
+			repositorioMedicacion.create(entrada);
 		}
 	}
 
 	@Override
-	public List<EnfermedadMedicamento> eliminaPorEnfermedad(Long idEnfermedad) {
-		obtenEnfermedad(idEnfermedad);
-		return repositorioEnfermedadMedicamento.deleteByDisease(idEnfermedad);
+	public List<MedicamentoDTO> eliminaPorEnfermedad(Long idEnfermedad) {
+		List<MedicamentoDTO> medicamentos = listaPorEnfermedad(idEnfermedad);
+		repositorioMedicacion.deleteByDisease(idEnfermedad);
+		return medicamentos;
 	}
 
 	@Override
-	public List<EnfermedadMedicamento> listaPorEnfermedad(Long idEnfermedad) {
+	public List<MedicamentoDTO> listaPorEnfermedad(Long idEnfermedad) {
 		obtenEnfermedad(idEnfermedad);
-		return repositorioEnfermedadMedicamento.listByDisease(idEnfermedad);
+		List<Medicamento> medicamentos = repositorioMedicamento.listByDisease(idEnfermedad);
+		return traductor.traduceAListaDTOs(medicamentos);
 	}
 
 }

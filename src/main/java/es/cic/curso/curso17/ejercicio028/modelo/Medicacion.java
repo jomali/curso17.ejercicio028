@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "ENFERMEDAD_MEDICAMENTO")
-public class EnfermedadMedicamento implements Identificable<Long>, Cloneable {
+public class Medicacion implements Identificable<Long>, Cloneable {
 	private static final long serialVersionUID = -1834404426900148883L;
 
 	/** Identificador. Rango de valores: <code>[-2^63, 2^63)</code>. */
@@ -91,7 +91,7 @@ public class EnfermedadMedicamento implements Identificable<Long>, Cloneable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		EnfermedadMedicamento other = (EnfermedadMedicamento) obj;
+		Medicacion other = (Medicacion) obj;
 		if (enfermedad == null) {
 			if (other.enfermedad != null)
 				return false;
@@ -112,8 +112,8 @@ public class EnfermedadMedicamento implements Identificable<Long>, Cloneable {
 
 
 	@Override
-	public EnfermedadMedicamento clone() {
-		EnfermedadMedicamento clon = new EnfermedadMedicamento();
+	public Medicacion clone() {
+		Medicacion clon = new Medicacion();
 		clon.id = id;
 		clon.enfermedad = enfermedad;
 		clon.medicamento = medicamento;

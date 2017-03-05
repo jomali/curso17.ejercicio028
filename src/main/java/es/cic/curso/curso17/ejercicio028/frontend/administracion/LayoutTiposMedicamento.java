@@ -62,9 +62,12 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 	protected Button generaBotonAceptarVentanaConfirmacionBorrado(Window ventana) {
 		Button botonAceptar = new Button("Aceptar");
 		botonAceptar.addClickListener(e -> {
+			String nombre = elementoSeleccionado.getNombre();
 			servicioTipoMedicamento.eliminaTipoMedicamento(elementoSeleccionado.getId());
 			cargaGrid();
 			ventana.close();
+			new Notification("Entrada eliminada: <strong>\"" + nombre + "\"</strong>", "",
+					Type.TRAY_NOTIFICATION, true).show(Page.getCurrent());
 		});
 		return botonAceptar;
 	}
@@ -88,6 +91,7 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 		textAreaDescripcion.addTextChangeListener(e -> botonAcepta.setEnabled(true));
 
 		botonAcepta = new Button("Aceptar");
+		botonAcepta.setEnabled(false);
 		botonAcepta.addClickListener(e -> {
 			TipoMedicamento nuevoTipo = new TipoMedicamento();
 			nuevoTipo.setNombre(textFieldNombre.getValue());

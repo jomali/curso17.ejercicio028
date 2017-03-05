@@ -22,12 +22,32 @@ public class RepositorioMedicamentoImpl extends RepositorioAbstractoImpl<Long, M
 		return "MEDICAMENTO";
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Medicamento> listByType(Long idType) {
-		return entityManager
-				.createNamedQuery("SELECT * FROM MEDICAMENTO WHERE id_tipo_medicamento = ?", Medicamento.class)
-				.setParameter(1, idType).getResultList();
+		List<Medicamento> resultado;
+		try {
+			resultado = entityManager
+					.createNativeQuery("SELECT * FROM MEDICAMENTO WHERE id_tipo_medicamento = ?", obtenClaseT())
+					.setParameter(1, idType).getResultList();
+		} catch (Exception e) {
+			return null;
+		}
+		return resultado;
+	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Medicamento> listByDisease(Long idDisease) {
+		List<Medicamento> resultado;
+		try {
+			resultado = entityManager.createNativeQuery(
+					"SELECT MEDICAMENTO.* FROM MEDICAMENTO INNER JOIN ENFERMEDAD_MEDICAMENTO ON MEDICAMENTO.id = ENFERMEDAD_MEDICAMENTO.id_medicamento AND ENFERMEDAD_MEDICAMENTO.id_enfermedad = ?",
+					obtenClaseT()).setParameter(1, idDisease).getResultList();
+		} catch (Exception e) {
+			return null;
+		}
+		return resultado;
 	}
 
 }

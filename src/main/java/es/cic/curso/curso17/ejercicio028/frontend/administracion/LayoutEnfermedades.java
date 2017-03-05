@@ -1,5 +1,6 @@
 package es.cic.curso.curso17.ejercicio028.frontend.administracion;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -24,11 +25,9 @@ import com.vaadin.ui.Grid.SelectionMode;
 
 import es.cic.curso.curso17.ejercicio028.dto.EnfermedadDTO;
 import es.cic.curso.curso17.ejercicio028.dto.MedicamentoDTO;
-import es.cic.curso.curso17.ejercicio028.dto.MedicamentoDTOTraductor;
 import es.cic.curso.curso17.ejercicio028.frontend.VistaAdministracion;
-import es.cic.curso.curso17.ejercicio028.modelo.EnfermedadMedicamento;
 import es.cic.curso.curso17.ejercicio028.servicio.ServicioEnfermedad;
-import es.cic.curso.curso17.ejercicio028.servicio.ServicioEnfermedadMedicamento;
+import es.cic.curso.curso17.ejercicio028.servicio.ServicioMedicacion;
 import es.cic.curso.curso17.ejercicio028.servicio.ServicioMedicamento;
 
 public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
@@ -43,13 +42,13 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 	private ServicioMedicamento servicioMedicamento;
 
 	/** Lógica de negocio con acceso a BB.DD.: medicación recomendada */
-	private ServicioEnfermedadMedicamento servicioMedicacion;
-
-	private MedicamentoDTOTraductor traductor;
+	private ServicioMedicacion servicioMedicacion;
 
 	private TextField textFieldNombre;
 
 	private TextField textFieldCie10;
+
+	private List<MedicamentoDTO> medicacionRecomendada;
 
 	private TextArea textAreaDescripcion;
 
@@ -59,9 +58,8 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		super(padre, POSICION_DIVISOR);
 		servicioEnfermedad = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioEnfermedad.class);
 		servicioMedicamento = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioMedicamento.class);
-		servicioMedicacion = ContextLoader.getCurrentWebApplicationContext()
-				.getBean(ServicioEnfermedadMedicamento.class);
-		traductor = ContextLoader.getCurrentWebApplicationContext().getBean(MedicamentoDTOTraductor.class);
+		servicioMedicacion = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioMedicacion.class);
+		refrescaDatos();
 	}
 
 	@Override
@@ -76,6 +74,7 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		grid.addSelectionListener(e -> {
 			elementoSeleccionado = (e.getSelected().isEmpty()) ? null
 					: (EnfermedadDTO) e.getSelected().iterator().next();
+			refrescaDatos();
 			cargaFormulario(elementoSeleccionado);
 		});
 
@@ -88,45 +87,45 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		layoutFormulario.setMargin(false);
 		layoutFormulario.setSpacing(true);
 
+		// TextField : NOMBRE
 		textFieldNombre = new TextField("Nombre:");
-		textFieldNombre.setSizeFull();
 		textFieldNombre.setInputPrompt("Nombre");
 		textFieldNombre.setRequired(true);
+		textFieldNombre.setSizeFull();
 		textFieldNombre.addTextChangeListener(e -> botonAcepta.setEnabled(true));
 
+		// TextField : CIE-10
 		textFieldCie10 = new TextField("CIE-10:");
 		textFieldCie10.setInputPrompt("Código CIE-10");
 		textFieldCie10.setRequired(true);
 		textFieldCie10.setSizeFull();
 		textFieldCie10.addTextChangeListener(e -> botonAcepta.setEnabled(true));
 
+		// Button : MEDICACIÓN RECOMENDADA
 		Button botonMedicacion = new Button("Medicación recomendada");
 		botonMedicacion.setDescription("Selecciona la medicación recomendada");
 		botonMedicacion.setStyleName("link");
-		botonMedicacion.addClickListener(e -> {
-			String nombre = (elementoSeleccionado != null) ? elementoSeleccionado.getNombre() : null;
-			List<EnfermedadMedicamento> medicacion = servicioMedicacion
-					.listaPorEnfermedad(elementoSeleccionado.getId());
-			this.getUI().getUI().addWindow(creaVentanaMedicacionRecomendada(nombre, medicacion));
-		});
+		botonMedicacion.addClickListener(e -> this.getUI().getUI().addWindow(creaVentanaMedicacionRecomendada()));
 
+		// TextArea : DESCRIPCIÓN
 		textAreaDescripcion = new TextArea("Descripción:");
 		textAreaDescripcion.setRows(5);
 		textAreaDescripcion.setSizeFull();
 		textAreaDescripcion.setInputPrompt("Descripción");
 		textAreaDescripcion.addTextChangeListener(e -> botonAcepta.setEnabled(true));
 
+		// Button : ACEPTAR
 		botonAcepta = new Button("Aceptar");
+		botonAcepta.setEnabled(false);
 		botonAcepta.addClickListener(e -> {
-			EnfermedadDTO nuevaEnfermedad = new EnfermedadDTO();
-			nuevaEnfermedad.setNombre(textFieldNombre.getValue());
-			nuevaEnfermedad.setCie10(textFieldCie10.getValue());
-			nuevaEnfermedad.setDescripcion(textAreaDescripcion.getValue());
+			EnfermedadDTO nuevaEnfermedad = new EnfermedadDTO(textFieldNombre.getValue(), textFieldCie10.getValue(),
+					textAreaDescripcion.getValue());
 			activaFormulario(false);
 			// Agregar elemento:
 			if (elementoSeleccionado == null) {
-				servicioEnfermedad.agregaEnfermedad(nuevaEnfermedad);
-				cargaGrid();
+				Long id = servicioEnfermedad.agregaEnfermedad(nuevaEnfermedad);
+				servicioMedicacion.eliminaPorEnfermedad(id);
+				servicioMedicacion.agregaPorEnfermedad(id, medicacionRecomendada);
 				botonAgrega.setEnabled(true);
 				botonEdita.setEnabled(false);
 				botonElimina.setEnabled(false);
@@ -136,28 +135,34 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 			// Editar elemento:
 			else {
 				servicioEnfermedad.modificaEnfermedad(elementoSeleccionado.getId(), nuevaEnfermedad);
-				cargaGrid();
+				servicioMedicacion.eliminaPorEnfermedad(elementoSeleccionado.getId());
+				servicioMedicacion.agregaPorEnfermedad(elementoSeleccionado.getId(), medicacionRecomendada);
 				elementoSeleccionado = null;
-				botonAgrega.setEnabled(true);
-				botonEdita.setEnabled(false);
-				botonElimina.setEnabled(false);
+				botonAgrega.setEnabled(false);
+				botonEdita.setEnabled(true);
+				botonElimina.setEnabled(true);
 				new Notification("Entrada modificada: <strong>\"" + nuevaEnfermedad.getNombre() + "\"</strong>", "",
 						Type.TRAY_NOTIFICATION, true).show(Page.getCurrent());
 			}
+			cargaGrid();
 			cargaFormulario(elementoSeleccionado);
 		});
+
+		// Button : CANCELAR
 		Button botonCancela = new Button("Cancelar");
 		botonCancela.addClickListener(e -> {
 			activaFormulario(false);
 			botonAgrega.setEnabled(elementoSeleccionado == null ? true : false);
 			botonEdita.setEnabled(elementoSeleccionado == null ? false : true);
 			botonElimina.setEnabled(elementoSeleccionado == null ? false : true);
+			refrescaDatos();
 			cargaFormulario(elementoSeleccionado);
 		});
 
 		HorizontalLayout layoutBotonesFormulario = new HorizontalLayout();
 		layoutBotonesFormulario.setSpacing(true);
-		layoutBotonesFormulario.addComponents(botonAcepta, botonCancela);
+		layoutBotonesFormulario.addComponent(botonAcepta);
+		layoutBotonesFormulario.addComponent(botonCancela);
 
 		layoutFormulario.addComponent(textFieldNombre);
 		layoutFormulario.addComponent(textFieldCie10);
@@ -171,9 +176,12 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 	protected Button generaBotonAceptarVentanaConfirmacionBorrado(Window ventana) {
 		Button botonAceptar = new Button("Aceptar");
 		botonAceptar.addClickListener(e -> {
+			String nombre = elementoSeleccionado.getNombre();
 			servicioEnfermedad.eliminaEnfermedad(elementoSeleccionado.getId());
 			cargaGrid();
 			ventana.close();
+			new Notification("Entrada eliminada: <strong>\"" + nombre + "\"</strong>", "", Type.TRAY_NOTIFICATION, true)
+					.show(Page.getCurrent());
 		});
 		return botonAceptar;
 	}
@@ -188,8 +196,8 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 			textFieldNombre.setValue(elemento.getNombre());
 			textFieldCie10.setValue(elemento.getCie10());
 			textAreaDescripcion.setValue(elemento.getDescripcion() == null ? "" : elemento.getDescripcion());
-			botonAcepta.setEnabled(false);
 		}
+		botonAcepta.setEnabled(false);
 	}
 
 	@Override
@@ -198,10 +206,16 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		grid.setContainerDataSource(new BeanItemContainer<>(EnfermedadDTO.class, elementos));
 	}
 
-	private Window creaVentanaMedicacionRecomendada(String elemento, Collection<EnfermedadMedicamento> medicacion) {
-		String titulo = "Medicación recomendada";
+	public void refrescaDatos() {
+		this.medicacionRecomendada = (elementoSeleccionado == null) ? new ArrayList<>()
+				: servicioMedicacion.listaPorEnfermedad(elementoSeleccionado.getId());
+	}
+
+	private Window creaVentanaMedicacionRecomendada() {
 		Window resultado = new Window();
-		resultado.setCaption(elemento == null ? titulo : titulo + ": <strong>\"" + elemento + "\"</strong>");
+		String titulo = "Medicación recomendada";
+		resultado.setCaption(elementoSeleccionado == null ? titulo
+				: titulo + ": <strong>\"" + elementoSeleccionado.getNombre() + "\"</strong>");
 		resultado.setCaptionAsHtml(true);
 		resultado.setModal(true);
 		resultado.setClosable(true);
@@ -216,9 +230,10 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		gridMedicacion.setSizeFull();
 		Collection<MedicamentoDTO> medicamentos = servicioMedicamento.listaMedicamentos();
 		gridMedicacion.setContainerDataSource(new BeanItemContainer<>(MedicamentoDTO.class, medicamentos));
-		for (EnfermedadMedicamento m : medicacion) {
-			gridMedicacion.select(traductor.traduceADTO(m.getMedicamento()));
+		for (MedicamentoDTO medicamento : medicacionRecomendada) {
+			gridMedicacion.select(medicamento);
 		}
+		gridMedicacion.addSelectionListener(e -> botonAcepta.setEnabled(true));
 
 		VerticalLayout layoutGrid = new VerticalLayout();
 		layoutGrid.setMargin(new MarginInfo(false, true, false, true));
@@ -228,12 +243,10 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 
 		Button botonAceptar = new Button("Aceptar");
 		botonAceptar.addClickListener(e -> {
-			// FIXME - Cuando no hay elementoSeleccionado
 			Collection<Object> seleccion = gridMedicacion.getSelectedRows();
-			servicioMedicacion.eliminaPorEnfermedad(elementoSeleccionado.getId());
+			medicacionRecomendada.clear();
 			for (Object obj : seleccion) {
-				MedicamentoDTO dto = (MedicamentoDTO) obj;
-				servicioMedicacion.agregaPorEnfermedad(elementoSeleccionado.getId(), dto);
+				medicacionRecomendada.add((MedicamentoDTO) obj);
 			}
 			resultado.close();
 		});
@@ -249,7 +262,7 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		layoutBotones.addComponents(botonAceptar, botonCancelar);
 
 		VerticalSplitPanel layoutPrincipal = new VerticalSplitPanel();
-		layoutPrincipal.setSplitPosition(76.0F, Unit.PERCENTAGE);
+		layoutPrincipal.setSplitPosition(90.0F, Unit.PIXELS, true);
 		layoutPrincipal.setLocked(true);
 		layoutPrincipal.setFirstComponent(layoutGrid);
 		layoutPrincipal.setSecondComponent(layoutBotones);

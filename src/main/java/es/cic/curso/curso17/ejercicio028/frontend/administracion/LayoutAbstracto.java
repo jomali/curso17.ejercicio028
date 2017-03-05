@@ -13,6 +13,7 @@ import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Grid.SelectionMode;
 
@@ -22,7 +23,7 @@ import es.cic.curso.curso17.ejercicio028.frontend.VistaAdministracion;
 public abstract class LayoutAbstracto<K> extends VerticalLayout implements Component {
 
 	protected static final float ANCHO_VENTANA_CONFIRMACION = 400.0F; // px
-	protected static final float ALTO_VENTANA_CONFIRMACION = 175.0F; // px
+	protected static final float ALTO_VENTANA_CONFIRMACION = 190.0F; // px
 
 	/** Referencia a la vista principal. */
 	protected VistaAdministracion padre;
@@ -199,8 +200,8 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 
 		Label label = new Label(obtenDescripcionElementoSeleccionado() == null
 				? "¿Está seguro de que desea borrar el elemento seleccionado?"
-				: "Está a punto de borrar el siguiente elemento:<br><br><strong>\""
-						+ obtenDescripcionElementoSeleccionado() + "\"</strong>");
+				: "Está a punto de borrar el siguiente elemento:<br><strong>\"" + obtenDescripcionElementoSeleccionado()
+						+ "\"</strong>");
 		label.setContentMode(ContentMode.HTML);
 
 		Button botonAceptar = generaBotonAceptarVentanaConfirmacionBorrado(resultado);
@@ -208,19 +209,26 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 		Button botonCancelar = new Button("Cancelar");
 		botonCancelar.addClickListener(e -> resultado.close());
 
+		VerticalLayout contenido = new VerticalLayout();
+		contenido.setMargin(true);
+		contenido.setSpacing(true);
+		contenido.setSizeFull();
+		contenido.addComponent(label);
+
 		HorizontalLayout layoutBotones = new HorizontalLayout();
-		layoutBotones.setMargin(true);
+		layoutBotones.setMargin(new MarginInfo(false, true, false, true));
 		layoutBotones.setSpacing(true);
+		layoutBotones.setHeight(100.0F, Unit.PERCENTAGE);
+		layoutBotones.setDefaultComponentAlignment(Alignment.MIDDLE_RIGHT);
 		layoutBotones.addComponents(botonAceptar, botonCancelar);
 
-		final VerticalLayout layoutConfirmacion = new VerticalLayout();
-		layoutConfirmacion.setMargin(true);
-		layoutConfirmacion.setSpacing(true);
-		layoutConfirmacion.setSizeFull();
-		layoutConfirmacion.addComponents(label, layoutBotones);
-		layoutConfirmacion.setComponentAlignment(layoutBotones, Alignment.BOTTOM_CENTER);
+		VerticalSplitPanel layoutPrincipal = new VerticalSplitPanel();
+		layoutPrincipal.setSplitPosition(90.0F, Unit.PIXELS, true);
+		layoutPrincipal.setLocked(true);
+		layoutPrincipal.setFirstComponent(contenido);
+		layoutPrincipal.setSecondComponent(layoutBotones);
 
-		resultado.setContent(layoutConfirmacion);
+		resultado.setContent(layoutPrincipal);
 		resultado.center();
 		return resultado;
 	}
