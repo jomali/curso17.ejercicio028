@@ -22,7 +22,7 @@ public class Medicamento implements Cloneable, Identificable<Long> {
 
 	/** Referencia al tipo de medicamento. */
 	@JoinColumn(name = "id_tipo_medicamento")
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private TipoMedicamento tipo;
 
 	/** Nombre del medicamento. */

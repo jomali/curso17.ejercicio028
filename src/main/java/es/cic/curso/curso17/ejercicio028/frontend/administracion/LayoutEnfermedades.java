@@ -24,8 +24,11 @@ import com.vaadin.ui.Grid.SelectionMode;
 
 import es.cic.curso.curso17.ejercicio028.dto.EnfermedadDTO;
 import es.cic.curso.curso17.ejercicio028.dto.MedicamentoDTO;
+import es.cic.curso.curso17.ejercicio028.dto.MedicamentoDTOTraductor;
 import es.cic.curso.curso17.ejercicio028.frontend.VistaAdministracion;
+import es.cic.curso.curso17.ejercicio028.modelo.EnfermedadMedicamento;
 import es.cic.curso.curso17.ejercicio028.servicio.ServicioEnfermedad;
+import es.cic.curso.curso17.ejercicio028.servicio.ServicioEnfermedadMedicamento;
 import es.cic.curso.curso17.ejercicio028.servicio.ServicioMedicamento;
 
 public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
@@ -39,6 +42,11 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 	/** Lógica de negocio con acceso a BB.DD.: medicamentos */
 	private ServicioMedicamento servicioMedicamento;
 
+	/** Lógica de negocio con acceso a BB.DD.: medicación recomendada */
+	private ServicioEnfermedadMedicamento servicioMedicacion;
+
+	private MedicamentoDTOTraductor traductor;
+
 	private TextField textFieldNombre;
 
 	private TextField textFieldCie10;
@@ -51,6 +59,9 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		super(padre, POSICION_DIVISOR);
 		servicioEnfermedad = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioEnfermedad.class);
 		servicioMedicamento = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioMedicamento.class);
+		servicioMedicacion = ContextLoader.getCurrentWebApplicationContext()
+				.getBean(ServicioEnfermedadMedicamento.class);
+		traductor = ContextLoader.getCurrentWebApplicationContext().getBean(MedicamentoDTOTraductor.class);
 	}
 
 	@Override
@@ -92,7 +103,12 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		Button botonMedicacion = new Button("Medicación recomendada");
 		botonMedicacion.setDescription("Selecciona la medicación recomendada");
 		botonMedicacion.setStyleName("link");
-		botonMedicacion.addClickListener(e -> this.getUI().getUI().addWindow(creaVentanaMedicacionRecomendada()));
+		botonMedicacion.addClickListener(e -> {
+			String nombre = (elementoSeleccionado != null) ? elementoSeleccionado.getNombre() : null;
+			List<EnfermedadMedicamento> medicacion = servicioMedicacion
+					.listaPorEnfermedad(elementoSeleccionado.getId());
+			this.getUI().getUI().addWindow(creaVentanaMedicacionRecomendada(nombre, medicacion));
+		});
 
 		textAreaDescripcion = new TextArea("Descripción:");
 		textAreaDescripcion.setRows(5);
@@ -182,11 +198,10 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		grid.setContainerDataSource(new BeanItemContainer<>(EnfermedadDTO.class, elementos));
 	}
 
-	private Window creaVentanaMedicacionRecomendada() {
+	private Window creaVentanaMedicacionRecomendada(String elemento, Collection<EnfermedadMedicamento> medicacion) {
 		String titulo = "Medicación recomendada";
 		Window resultado = new Window();
-		resultado.setCaption(elementoSeleccionado == null ? titulo
-				: titulo + ": <strong>\"" + elementoSeleccionado.getNombre() + "\"</strong>");
+		resultado.setCaption(elemento == null ? titulo : titulo + ": <strong>\"" + elemento + "\"</strong>");
 		resultado.setCaptionAsHtml(true);
 		resultado.setModal(true);
 		resultado.setClosable(true);
@@ -199,15 +214,12 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		gridMedicacion.setColumns("nombre", "nombreTipo");
 		gridMedicacion.setSelectionMode(SelectionMode.MULTI);
 		gridMedicacion.setSizeFull();
-		Collection<MedicamentoDTO> elementos = servicioMedicamento.listaMedicamentos();
-		gridMedicacion.setContainerDataSource(new BeanItemContainer<>(MedicamentoDTO.class, elementos));
+		Collection<MedicamentoDTO> medicamentos = servicioMedicamento.listaMedicamentos();
+		gridMedicacion.setContainerDataSource(new BeanItemContainer<>(MedicamentoDTO.class, medicamentos));
+		for (EnfermedadMedicamento m : medicacion) {
+			gridMedicacion.select(traductor.traduceADTO(m.getMedicamento()));
+		}
 
-		// FIXME - Eliminar
-		List<MedicamentoDTO> l = servicioMedicamento.listaMedicamentos();
-		gridMedicacion.select(l.get(0));
-		gridMedicacion.select(l.get(2));
-		gridMedicacion.select(l.get(3));
-		
 		VerticalLayout layoutGrid = new VerticalLayout();
 		layoutGrid.setMargin(new MarginInfo(false, true, false, true));
 		layoutGrid.setSpacing(false);
@@ -215,7 +227,16 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		layoutGrid.addComponent(gridMedicacion);
 
 		Button botonAceptar = new Button("Aceptar");
-		botonAceptar.addClickListener(e -> resultado.close());
+		botonAceptar.addClickListener(e -> {
+			// FIXME - Cuando no hay elementoSeleccionado
+			Collection<Object> seleccion = gridMedicacion.getSelectedRows();
+			servicioMedicacion.eliminaPorEnfermedad(elementoSeleccionado.getId());
+			for (Object obj : seleccion) {
+				MedicamentoDTO dto = (MedicamentoDTO) obj;
+				servicioMedicacion.agregaPorEnfermedad(elementoSeleccionado.getId(), dto);
+			}
+			resultado.close();
+		});
 
 		Button botonCancelar = new Button("Cancelar");
 		botonCancelar.addClickListener(e -> resultado.close());

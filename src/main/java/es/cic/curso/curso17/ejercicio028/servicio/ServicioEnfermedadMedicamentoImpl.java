@@ -1,12 +1,12 @@
 package es.cic.curso.curso17.ejercicio028.servicio;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.cic.curso.curso17.ejercicio028.dto.MedicamentoDTO;
 import es.cic.curso.curso17.ejercicio028.modelo.Enfermedad;
 import es.cic.curso.curso17.ejercicio028.modelo.EnfermedadMedicamento;
 import es.cic.curso.curso17.ejercicio028.modelo.Medicamento;
@@ -30,29 +30,29 @@ public class ServicioEnfermedadMedicamentoImpl implements ServicioEnfermedadMedi
 	private RepositorioEnfermedadMedicamento repositorioEnfermedadMedicamento;
 
 	private Enfermedad obtenEnfermedad(Long id) {
-		Enfermedad resultado = repositorioEnfermedad.read(id);
-		if (resultado == null) {
+		Enfermedad enfermedad = repositorioEnfermedad.read(id);
+		if (enfermedad == null) {
 			throw new IllegalArgumentException(ERROR_ID + ": " + id);
 		}
-		return resultado;
+		return enfermedad;
 	}
 
-	private Medicamento compruebaMedicamento(Medicamento medicamento) {
-		Medicamento resultado = repositorioMedicamento.read(medicamento.getId());
-		if (resultado == null) {
-			throw new IllegalArgumentException(ERROR_ID + ": " + medicamento.getId());
+	private Medicamento obtenMedicamento(MedicamentoDTO dto) {
+		Medicamento medicamento = repositorioMedicamento.read(dto.getId());
+		if (medicamento == null) {
+			throw new IllegalArgumentException(ERROR_ID + ": " + dto.getId());
 		}
-		return resultado;
+		return medicamento;
 	}
-
+	
 	@Override
-	public void agregaPorEnfermedad(Long idEnfermedad, Collection<Medicamento> medicamentos) {
-		Enfermedad e = obtenEnfermedad(idEnfermedad);
-		for (Medicamento medicamento : medicamentos) {
-			Medicamento m = compruebaMedicamento(medicamento);
+	public void agregaPorEnfermedad(Long idEnfermedad, MedicamentoDTO ... dtos) {
+		Enfermedad enfermedad = obtenEnfermedad(idEnfermedad);
+		for (MedicamentoDTO dto : dtos) {
+			Medicamento medicamento = obtenMedicamento(dto);
 			EnfermedadMedicamento entrada = new EnfermedadMedicamento();
-			entrada.setEnfermedad(e);
-			entrada.setMedicamento(m);
+			entrada.setEnfermedad(enfermedad);
+			entrada.setMedicamento(medicamento);
 			repositorioEnfermedadMedicamento.create(entrada);
 		}
 	}
