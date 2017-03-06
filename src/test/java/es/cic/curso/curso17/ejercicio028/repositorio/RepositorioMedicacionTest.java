@@ -27,7 +27,7 @@ import es.cic.curso.curso17.ejercicio028.modelo.TipoMedicamento;
 @ContextConfiguration(locations = { "classpath:es/cic/curso/curso17/ejercicio028/applicationContext.xml" })
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, TransactionalTestExecutionListener.class })
 @Transactional
-public class RepositorioEnfermedadMedicamentoTest {
+public class RepositorioMedicacionTest {
 
 	public static final int NUMERO_ELEMENTOS = 100;
 
