@@ -52,6 +52,16 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 		cargaComboBox();
 	}
 
+	private boolean validaFormulario() {
+		boolean resultado = true;
+		if ("".equals(textFieldNombre.getValue())) {
+			resultado = false;
+			textFieldNombre.focus();
+			Notification.show("Es necesario especificar un nombre.", Type.WARNING_MESSAGE);
+		}
+		return resultado;
+	}
+
 	@Override
 	protected String obtenDescripcionElementoSeleccionado() {
 		return elementoSeleccionado.getNombre();
@@ -78,15 +88,11 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 
 		textFieldNombre = new TextField("Nombre:");
 		textFieldNombre.setInputPrompt("Nombre");
+		textFieldNombre.setNullRepresentation("");
+		textFieldNombre.setNullSettingAllowed(false);
 		textFieldNombre.setRequired(true);
 		textFieldNombre.setSizeFull();
 		textFieldNombre.addTextChangeListener(e -> botonAcepta.setEnabled(true));
-
-		textAreaDescripcion = new TextArea("Descripción:");
-		textAreaDescripcion.setInputPrompt("Descripción");
-		textAreaDescripcion.setRows(5);
-		textAreaDescripcion.setSizeFull();
-		textAreaDescripcion.addTextChangeListener(e -> botonAcepta.setEnabled(true));
 
 		comboBoxTipoMedicamento = new ComboBox("Tipo:");
 		comboBoxTipoMedicamento.setFilteringMode(FilteringMode.CONTAINS);
@@ -98,9 +104,20 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 		comboBoxTipoMedicamento.setWidth(250.0F, Unit.PIXELS);
 		comboBoxTipoMedicamento.addValueChangeListener(e -> botonAcepta.setEnabled(true));
 
+		textAreaDescripcion = new TextArea("Descripción:");
+		textAreaDescripcion.setInputPrompt("Descripción");
+		textAreaDescripcion.setNullRepresentation("");
+		textAreaDescripcion.setNullSettingAllowed(false);
+		textAreaDescripcion.setRows(5);
+		textAreaDescripcion.setSizeFull();
+		textAreaDescripcion.addTextChangeListener(e -> botonAcepta.setEnabled(true));
+
 		botonAcepta = new Button("Aceptar");
 		botonAcepta.setEnabled(false);
 		botonAcepta.addClickListener(e -> {
+			if (!validaFormulario()) {
+				return;
+			}
 			TipoMedicamento tipo = (TipoMedicamento) comboBoxTipoMedicamento.getValue();
 			MedicamentoDTO nuevoMedicamento = new MedicamentoDTO();
 			nuevoMedicamento.setNombre(textFieldNombre.getValue());
@@ -114,7 +131,8 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 				botonAgrega.setEnabled(true);
 				botonEdita.setEnabled(false);
 				botonElimina.setEnabled(false);
-				new Notification("Entrada añadida: <strong>\"" + nuevoMedicamento.getNombre() + "\"</strong>", "",
+				new Notification(
+						String.format("Entrada añadida: <strong>\"%s\"</strong>", nuevoMedicamento.getNombre()), "",
 						Type.TRAY_NOTIFICATION, true).show(Page.getCurrent());
 			}
 			// Editar elemento:
@@ -125,7 +143,8 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 				botonAgrega.setEnabled(true);
 				botonEdita.setEnabled(false);
 				botonElimina.setEnabled(false);
-				new Notification("Entrada modificada: <strong>\"" + nuevoMedicamento.getNombre() + "\"</strong>", "",
+				new Notification(
+						String.format("Entrada modificada: <strong>\"%s\"</strong>", nuevoMedicamento.getNombre()), "",
 						Type.TRAY_NOTIFICATION, true).show(Page.getCurrent());
 			}
 			cargaFormulario(elementoSeleccionado);
@@ -160,8 +179,8 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 			padre.refrescaDatos();
 			cargaGrid();
 			ventana.close();
-			new Notification("Entrada eliminada: <strong>\"" + nombre + "\"</strong>", "", Type.TRAY_NOTIFICATION, true)
-					.show(Page.getCurrent());
+			new Notification(String.format("Entrada eliminada: <strong>\"%s\"</strong>", nombre), "",
+					Type.TRAY_NOTIFICATION, true).show(Page.getCurrent());
 		});
 		return botonAceptar;
 	}

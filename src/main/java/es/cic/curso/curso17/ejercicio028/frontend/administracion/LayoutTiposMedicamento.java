@@ -22,7 +22,7 @@ import es.cic.curso.curso17.ejercicio028.servicio.ServicioTipoMedicamento;
 
 public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 	private static final long serialVersionUID = 514378371321635909L;
-	
+
 	public static final float POSICION_DIVISOR = 30.0F;
 
 	/** Lógica de negocio con acceso a BB.DD.: tipos de medicamento */
@@ -38,6 +38,16 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 		super(padre, POSICION_DIVISOR);
 		servicioTipoMedicamento = ContextLoader.getCurrentWebApplicationContext()
 				.getBean(ServicioTipoMedicamento.class);
+	}
+
+	private boolean validaFormulario() {
+		boolean resultado = true;
+		if ("".equals(textFieldNombre.getValue())) {
+			resultado = false;
+			textFieldNombre.focus();
+			Notification.show("Es necesario especificar un nombre.", Type.WARNING_MESSAGE);
+		}
+		return resultado;
 	}
 
 	@Override
@@ -66,7 +76,7 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 			servicioTipoMedicamento.eliminaTipoMedicamento(elementoSeleccionado.getId());
 			cargaGrid();
 			ventana.close();
-			new Notification("Entrada eliminada: <strong>\"" + nombre + "\"</strong>", "",
+			new Notification(String.format("Entrada eliminada: <strong>\"%s\"</strong>", nombre), "",
 					Type.TRAY_NOTIFICATION, true).show(Page.getCurrent());
 		});
 		return botonAceptar;
@@ -79,20 +89,27 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 		layoutFormulario.setSpacing(true);
 
 		textFieldNombre = new TextField("Nombre:");
-		textFieldNombre.setSizeFull();
 		textFieldNombre.setInputPrompt("Nombre");
+		textFieldNombre.setNullRepresentation("");
+		textFieldNombre.setNullSettingAllowed(false);
 		textFieldNombre.setRequired(true);
+		textFieldNombre.setSizeFull();
 		textFieldNombre.addTextChangeListener(e -> botonAcepta.setEnabled(true));
 
 		textAreaDescripcion = new TextArea("Descripción:");
+		textAreaDescripcion.setInputPrompt("Descripción");
+		textAreaDescripcion.setNullRepresentation("");
+		textAreaDescripcion.setNullSettingAllowed(true);
 		textAreaDescripcion.setRows(5);
 		textAreaDescripcion.setSizeFull();
-		textAreaDescripcion.setInputPrompt("Descripción");
 		textAreaDescripcion.addTextChangeListener(e -> botonAcepta.setEnabled(true));
 
 		botonAcepta = new Button("Aceptar");
 		botonAcepta.setEnabled(false);
 		botonAcepta.addClickListener(e -> {
+			if (!validaFormulario()) {
+				return;
+			}
 			TipoMedicamento nuevoTipo = new TipoMedicamento();
 			nuevoTipo.setNombre(textFieldNombre.getValue());
 			nuevoTipo.setDescripcion(textAreaDescripcion.getValue());
@@ -103,7 +120,7 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 				botonAgrega.setEnabled(true);
 				botonEdita.setEnabled(false);
 				botonElimina.setEnabled(false);
-				new Notification("Entrada añadida: <strong>\"" + nuevoTipo.getNombre() + "\"</strong>", "",
+				new Notification(String.format("Entrada añadida: <strong>\"%s\"</strong>", nuevoTipo.getNombre()), "",
 						Type.TRAY_NOTIFICATION, true).show(Page.getCurrent());
 			}
 			// Editar elemento:
@@ -113,7 +130,7 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 				botonAgrega.setEnabled(true);
 				botonEdita.setEnabled(false);
 				botonElimina.setEnabled(false);
-				new Notification("Entrada modificada: <strong>\"" + nuevoTipo.getNombre() + "\"</strong>", "",
+				new Notification(String.format("Entrada modificada: <strong>\"%s\"</strong>", nuevoTipo.getNombre()), "",
 						Type.TRAY_NOTIFICATION, true).show(Page.getCurrent());
 			}
 			padre.cargaDatos();

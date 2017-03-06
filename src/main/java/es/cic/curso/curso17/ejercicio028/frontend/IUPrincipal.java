@@ -30,6 +30,8 @@ public class IUPrincipal extends UI {
 
 	public static final String VISTA_ADMINISTRACION = "admin";
 	public static final String VISTA_DEMO = "demo";
+	public static final String VISTA_NUEVA_RECETA = "nueva-receta";
+	public static final String VISTA_PRINCIPAL = "";
 
 	/** Gestiona una colección de implementaciones de <code>View</code>. */
 	Navigator navegador;
@@ -48,7 +50,8 @@ public class IUPrincipal extends UI {
 		navegador = new Navigator(this, this);
 
 		// Crea y registra las vistas:
-		navegador.addView("", new VistaPrincipal(navegador));
+		navegador.addView(VISTA_PRINCIPAL, new VistaPrincipal(navegador));
+		navegador.addView(VISTA_NUEVA_RECETA, new VistaNuevaReceta(navegador));
 		navegador.addView(VISTA_ADMINISTRACION, new VistaAdministracion());
 		navegador.addView(VISTA_DEMO, new VistaDemo(navegador));
 	}
