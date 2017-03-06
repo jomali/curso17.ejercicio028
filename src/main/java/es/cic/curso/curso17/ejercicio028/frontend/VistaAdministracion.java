@@ -1,17 +1,9 @@
 package es.cic.curso.curso17.ejercicio028.frontend;
 
-import java.io.File;
-
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.FileResource;
-import com.vaadin.server.VaadinService;
-import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Image;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 
@@ -52,7 +44,7 @@ public class VistaAdministracion extends VerticalLayout implements View {
 		setSpacing(true);
 
 		// Layout : ENCABEZADO
-		HorizontalLayout layoutEncabezado = inicializaLayoutEncabezado();
+		HorizontalLayout layoutEncabezado = new LayoutCabecera("Administración");
 
 		// Layout : CONTENIDO
 		VerticalLayout layoutContenido = inicializaLayoutContenido();
@@ -62,24 +54,6 @@ public class VistaAdministracion extends VerticalLayout implements View {
 
 	// /////////////////////////////////////////////////////////////////////////
 	// Inicialización de componentes gráficos:
-
-	private HorizontalLayout inicializaLayoutEncabezado() {
-		HorizontalLayout layoutEncabezado = new HorizontalLayout();
-		layoutEncabezado.setMargin(false);
-		layoutEncabezado.setSpacing(true);
-		layoutEncabezado.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
-
-		String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
-		FileResource resource = new FileResource(new File(basepath + "/WEB-INF/images/cic_logo.png"));
-		Image imagen = new Image(null, resource);
-		imagen.setHeight(38.0F, Unit.PIXELS);
-
-		Label titulo = new Label("<span style=\"font-size: 150%;\">Administración</span>");
-		titulo.setContentMode(ContentMode.HTML);
-
-		layoutEncabezado.addComponents(imagen, titulo);
-		return layoutEncabezado;
-	}
 
 	private VerticalLayout inicializaLayoutContenido() {
 		VerticalLayout layoutContenido = new VerticalLayout();
