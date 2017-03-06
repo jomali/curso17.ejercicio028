@@ -1,4 +1,4 @@
-package es.cic.curso.curso17.ejercicio028.frontend.administracion;
+package es.cic.curso.curso17.ejercicio028.iu.administracion;
 
 import java.util.Collection;
 
@@ -16,7 +16,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Notification.Type;
 
-import es.cic.curso.curso17.ejercicio028.frontend.VistaAdministracion;
+import es.cic.curso.curso17.ejercicio028.iu.VistaAdministracion;
 import es.cic.curso.curso17.ejercicio028.modelo.TipoMedicamento;
 import es.cic.curso.curso17.ejercicio028.servicio.ServicioTipoMedicamento;
 

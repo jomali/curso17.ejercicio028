@@ -1,5 +1,6 @@
 package es.cic.curso.curso17.ejercicio028.modelo;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +17,14 @@ public class Receta implements Identificable<Long> {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
+	/** Nombre de la enfermedad. */
+	@Column(name = "nombre")
+	private String nombre;
+
+	/** Descripción de la enfermedad. */
+	@Column(name = "descripcion")
+	private String descripcion;
+
 	/**
 	 * @return the id
 	 */
@@ -25,12 +34,42 @@ public class Receta implements Identificable<Long> {
 	}
 
 	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @return the descripcion
+	 */
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
 	 * @param id
 	 *            the id to set
 	 */
 	@Override
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	/**
+	 * @param descripcion
+	 *            the descripcion to set
+	 */
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 
 	@Override
@@ -56,11 +95,6 @@ public class Receta implements Identificable<Long> {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Receta [id=" + id + "]";
 	}
 
 }

@@ -7,10 +7,11 @@
 		transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>es.cic.curso.curso17.ejercicio028.modelo.Enfermedad</class>
+		<class>es.cic.curso.curso17.ejercicio028.modelo.Medicacion</class>
 		<class>es.cic.curso.curso17.ejercicio028.modelo.Medicamento</class>
 		<class>es.cic.curso.curso17.ejercicio028.modelo.Receta</class>
 		<class>es.cic.curso.curso17.ejercicio028.modelo.TipoMedicamento</class>
-		<class>es.cic.curso.curso17.ejercicio028.modelo.Medicacion</class>
+		<class>es.cic.curso.curso17.ejercicio028.modelo.Tratamiento</class>
 
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>

@@ -1,4 +1,4 @@
-package es.cic.curso.curso17.ejercicio028.frontend;
+package es.cic.curso.curso17.ejercicio028.iu;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -7,9 +7,9 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 
-import es.cic.curso.curso17.ejercicio028.frontend.administracion.LayoutEnfermedades;
-import es.cic.curso.curso17.ejercicio028.frontend.administracion.LayoutMedicamentos;
-import es.cic.curso.curso17.ejercicio028.frontend.administracion.LayoutTiposMedicamento;
+import es.cic.curso.curso17.ejercicio028.iu.administracion.LayoutEnfermedades;
+import es.cic.curso.curso17.ejercicio028.iu.administracion.LayoutMedicamentos;
+import es.cic.curso.curso17.ejercicio028.iu.administracion.LayoutTiposMedicamento;
 
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;

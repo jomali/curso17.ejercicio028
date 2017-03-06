@@ -1,4 +1,4 @@
-package es.cic.curso.curso17.ejercicio028.frontend.administracion;
+package es.cic.curso.curso17.ejercicio028.iu.administracion;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
@@ -17,7 +17,7 @@ import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Grid.SelectionMode;
 
-import es.cic.curso.curso17.ejercicio028.frontend.VistaAdministracion;
+import es.cic.curso.curso17.ejercicio028.iu.VistaAdministracion;
 
 @SuppressWarnings("serial")
 public abstract class LayoutAbstracto<K> extends VerticalLayout implements Component {
@@ -85,16 +85,13 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 		// TextField : FILTRO
 		textFieldFiltro = new TextField();
 		textFieldFiltro.setInputPrompt("Buscar...");
-		textFieldFiltro.addTextChangeListener(e -> {
-			botonLimpiaSeleccion.setEnabled(true);
-		});
+		textFieldFiltro.addTextChangeListener(e -> botonLimpiaSeleccion.setEnabled(true));
 
 		// Button : LIMPIAR SELECCIÓN
 		botonLimpiaSeleccion = new Button();
 		botonLimpiaSeleccion.setDescription("Cancela la selección actual");
 		botonLimpiaSeleccion.setEnabled(false);
 		botonLimpiaSeleccion.setIcon(FontAwesome.ERASER);
-		// botonLimpiaSeleccion.setStyleName("primary");
 		botonLimpiaSeleccion.addClickListener(e -> {
 			botonAgrega.setEnabled(true);
 			botonEdita.setEnabled(false);

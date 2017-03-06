@@ -17,5 +17,7 @@ public interface Repositorio<K extends Number, T extends Identificable<K>> {
 	void delete(T element);
 
 	List<T> list();
+	
+	List<T> listColumnLike(String columnName, String value);
 
 }

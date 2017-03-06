@@ -34,9 +34,9 @@ public class RepositorioEnfermedadTest {
 	@PersistenceContext
 	protected EntityManager em;
 
-	private Enfermedad generaElementoPrueba() {
+	private Enfermedad generaElementoPrueba(String nombre) {
 		Enfermedad elemento = new Enfermedad();
-		elemento.setNombre("enfermedad");
+		elemento.setNombre(nombre == null ? "enfermedad" : nombre);
 		elemento.setCie10("U00-U99");
 		elemento.setDescripcion("descripción de la enfermedad");
 		em.persist(elemento);
@@ -55,7 +55,7 @@ public class RepositorioEnfermedadTest {
 
 	@Test
 	public void testRead() {
-		Enfermedad elemento1 = generaElementoPrueba();
+		Enfermedad elemento1 = generaElementoPrueba(null);
 		Enfermedad elemento2 = sut.read(elemento1.getId());
 
 		assertTrue(elemento1.getId().equals(elemento2.getId()));
@@ -71,7 +71,7 @@ public class RepositorioEnfermedadTest {
 
 	@Test
 	public void testUpdate() {
-		Enfermedad original = generaElementoPrueba();
+		Enfermedad original = generaElementoPrueba(null);
 		Enfermedad clon = original.clone();
 
 		original.setNombre("Modificado");
@@ -84,7 +84,7 @@ public class RepositorioEnfermedadTest {
 
 	@Test
 	public void testDelete() {
-		Enfermedad elemento = generaElementoPrueba();
+		Enfermedad elemento = generaElementoPrueba(null);
 		sut.delete(elemento.getId());
 
 		Enfermedad resultado = sut.read(elemento.getId());
@@ -94,10 +94,22 @@ public class RepositorioEnfermedadTest {
 	@Test
 	public void testList() {
 		for (int i = 0; i < NUMERO_ELEMENTOS; i++) {
-			generaElementoPrueba();
+			generaElementoPrueba(null);
 		}
 
 		List<Enfermedad> lista = sut.list();
+		assertEquals(NUMERO_ELEMENTOS, lista.size());
+	}
+	
+	@Test
+	public void testListColumnLike() {
+		for (int i = 0; i < NUMERO_ELEMENTOS; i++) {
+			generaElementoPrueba(i + "elemento");
+		}
+		List<Enfermedad> lista;
+		lista = sut.listColumnLike("nombre", "1e");
+		assertEquals(1, lista.size());
+		lista = sut.listColumnLike("nombre", "ele");
 		assertEquals(NUMERO_ELEMENTOS, lista.size());
 	}
 

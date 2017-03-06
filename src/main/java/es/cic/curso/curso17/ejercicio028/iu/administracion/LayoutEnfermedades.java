@@ -1,4 +1,4 @@
-package es.cic.curso.curso17.ejercicio028.frontend.administracion;
+package es.cic.curso.curso17.ejercicio028.iu.administracion;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +25,7 @@ import com.vaadin.ui.Grid.SelectionMode;
 
 import es.cic.curso.curso17.ejercicio028.dto.EnfermedadDTO;
 import es.cic.curso.curso17.ejercicio028.dto.MedicamentoDTO;
-import es.cic.curso.curso17.ejercicio028.frontend.VistaAdministracion;
+import es.cic.curso.curso17.ejercicio028.iu.VistaAdministracion;
 import es.cic.curso.curso17.ejercicio028.servicio.ServicioEnfermedad;
 import es.cic.curso.curso17.ejercicio028.servicio.ServicioMedicacion;
 import es.cic.curso.curso17.ejercicio028.servicio.ServicioMedicamento;
@@ -147,8 +147,7 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		Grid grid = new Grid();
 		grid.setColumns("nombre", "cie10");
 		grid.addSelectionListener(e -> {
-			elementoSeleccionado = (e.getSelected().isEmpty()) ? null
-					: (EnfermedadDTO) e.getSelected().iterator().next();
+			elementoSeleccionado = e.getSelected().isEmpty() ? null : (EnfermedadDTO) e.getSelected().iterator().next();
 			refrescaDatos();
 			cargaFormulario(elementoSeleccionado);
 		});

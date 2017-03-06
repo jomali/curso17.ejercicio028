@@ -1,5 +1,6 @@
 package es.cic.curso.curso17.ejercicio028.repositorio;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -54,6 +55,20 @@ public abstract class RepositorioAbstractoImpl<K extends Number, T extends Ident
 	@Override
 	public List<T> list() {
 		return entityManager.createNativeQuery("SELECT * FROM " + obtenNombreTabla(), obtenClaseT()).getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<T> listColumnLike(String columnName, String value) {
+		List<T> resultado = new ArrayList<>();
+		try {
+			resultado = entityManager
+					.createNativeQuery("SELECT * FROM " + obtenNombreTabla() + " WHERE ? LIKE '%?%'", obtenClaseT())
+					.setParameter(1, columnName).setParameter(2, value).getResultList();
+		} catch (Exception e) {
+
+		}
+		return resultado;
 	}
 
 }

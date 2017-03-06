@@ -1,4 +1,4 @@
-package es.cic.curso.curso17.ejercicio028.frontend;
+package es.cic.curso.curso17.ejercicio028.iu;
 
 import org.springframework.web.context.ContextLoader;
 
