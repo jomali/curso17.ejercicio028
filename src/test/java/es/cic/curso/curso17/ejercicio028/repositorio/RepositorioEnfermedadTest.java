@@ -100,17 +100,5 @@ public class RepositorioEnfermedadTest {
 		List<Enfermedad> lista = sut.list();
 		assertEquals(NUMERO_ELEMENTOS, lista.size());
 	}
-	
-	@Test
-	public void testListColumnLike() {
-		for (int i = 0; i < NUMERO_ELEMENTOS; i++) {
-			generaElementoPrueba(i + "elemento");
-		}
-		List<Enfermedad> lista;
-		lista = sut.listColumnLike("nombre", "1e");
-		assertEquals(1, lista.size());
-		lista = sut.listColumnLike("nombre", "ele");
-		assertEquals(NUMERO_ELEMENTOS, lista.size());
-	}
 
 }

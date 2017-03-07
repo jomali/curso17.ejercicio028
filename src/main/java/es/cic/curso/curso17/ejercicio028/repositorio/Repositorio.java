@@ -18,6 +18,4 @@ public interface Repositorio<K extends Number, T extends Identificable<K>> {
 
 	List<T> list();
 	
-	List<T> listColumnLike(String columnName, String value);
-
 }

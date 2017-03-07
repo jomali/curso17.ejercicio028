@@ -20,7 +20,6 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.transaction.annotation.Transactional;
 
 import es.cic.curso.curso17.ejercicio028.modelo.Enfermedad;
-import es.cic.curso.curso17.ejercicio028.modelo.Medicacion;
 import es.cic.curso.curso17.ejercicio028.modelo.Medicamento;
 import es.cic.curso.curso17.ejercicio028.modelo.Receta;
 import es.cic.curso.curso17.ejercicio028.modelo.TipoMedicamento;
