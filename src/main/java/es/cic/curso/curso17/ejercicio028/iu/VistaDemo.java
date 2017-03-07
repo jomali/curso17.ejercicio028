@@ -99,6 +99,6 @@ public class VistaDemo extends VerticalLayout implements View {
 		}
 
 		Notification.show("Cargados datos de DEMOSTRACIÓN.", Type.WARNING_MESSAGE);
-		navegador.navigateTo(IUPrincipal.VISTA_ADMINISTRACION);
+		navegador.navigateTo(IUPrincipal.VISTA_PRINCIPAL);
 	}
 }

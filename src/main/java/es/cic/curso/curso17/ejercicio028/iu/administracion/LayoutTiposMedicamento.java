@@ -93,6 +93,7 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 		textFieldNombre.setNullRepresentation("");
 		textFieldNombre.setNullSettingAllowed(false);
 		textFieldNombre.setRequired(true);
+		textFieldNombre.setRequiredError("Se debe especificar un nombre");
 		textFieldNombre.setSizeFull();
 		textFieldNombre.addTextChangeListener(e -> botonAcepta.setEnabled(true));
 

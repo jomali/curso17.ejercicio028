@@ -35,7 +35,7 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 
 	public static final float POSICION_DIVISOR = 35.0F;
 
-	public static final int MAX_MENSAJE_MEDICACION = 60;
+	public static final int MAX_MENSAJE_MEDICACION = 56;
 
 	/** Lógica de negocio con acceso a BB.DD.: enfermedades */
 	private ServicioEnfermedad servicioEnfermedad;
@@ -149,7 +149,7 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 			}
 			if (resultado.length() > MAX_MENSAJE_MEDICACION) {
 				resultado = resultado.substring(0, MAX_MENSAJE_MEDICACION);
-				resultado += "...";
+				resultado += "... (más)";
 			}
 		}
 		return resultado;
@@ -185,7 +185,7 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		textFieldNombre.setNullRepresentation("");
 		textFieldNombre.setNullSettingAllowed(false);
 		textFieldNombre.setRequired(true);
-		textFieldNombre.setRequiredError("Es necesario especificar un nombre");
+		textFieldNombre.setRequiredError("Se debe especificar un nombre");
 		textFieldNombre.setSizeFull();
 		textFieldNombre.addTextChangeListener(e -> botonAcepta.setEnabled(true));
 
@@ -195,7 +195,7 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		textFieldCie10.setNullRepresentation("");
 		textFieldCie10.setNullSettingAllowed(false);
 		textFieldCie10.setRequired(true);
-		textFieldCie10.setRequiredError("Es necesario especificar un código CIE-10");
+		textFieldCie10.setRequiredError("Se debe especificar un código CIE-10");
 		textFieldCie10.setSizeFull();
 		textFieldCie10.addTextChangeListener(e -> botonAcepta.setEnabled(true));
 

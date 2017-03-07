@@ -91,6 +91,7 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 		textFieldNombre.setNullRepresentation("");
 		textFieldNombre.setNullSettingAllowed(false);
 		textFieldNombre.setRequired(true);
+		textFieldNombre.setRequiredError("Se debe especificar un nombre");
 		textFieldNombre.setSizeFull();
 		textFieldNombre.addTextChangeListener(e -> botonAcepta.setEnabled(true));
 
@@ -100,6 +101,7 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 		comboBoxTipoMedicamento.setNullSelectionAllowed(false);
 		comboBoxTipoMedicamento.setPageLength(5);
 		comboBoxTipoMedicamento.setRequired(true);
+		comboBoxTipoMedicamento.setRequiredError("Se debe especificar un tipo de medicamento");
 		comboBoxTipoMedicamento.setTextInputAllowed(false);
 		comboBoxTipoMedicamento.setWidth(250.0F, Unit.PIXELS);
 		comboBoxTipoMedicamento.addValueChangeListener(e -> botonAcepta.setEnabled(true));

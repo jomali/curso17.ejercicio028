@@ -51,7 +51,7 @@ public class VistaPrincipal extends VerticalLayout implements View {
 
 	private VerticalLayout inicializaLayoutContenido() {
 		gridRecetas = new Grid();
-		gridRecetas.setColumns("nombre");
+		gridRecetas.setColumns("id");
 		gridRecetas.setSelectionMode(SelectionMode.NONE);
 		gridRecetas.setSizeFull();
 
