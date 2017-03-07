@@ -64,7 +64,7 @@
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="nombre" type="VARCHAR(100)">
-				<constraints nullable="false" />
+				<constraints nullable="true" />
 			</column>
 			<column name="descripcion" type="VARCHAR(255)">
 				<constraints nullable="true" />
@@ -76,9 +76,6 @@
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="id_receta" type="INT(10)">
-				<constraints nullable="false" />
-			</column>
-			<column name="id_enfermedad" type="INT(10)">
 				<constraints nullable="false" />
 			</column>
 			<column name="id_medicamento" type="INT(10)">
@@ -99,10 +96,6 @@
 		<addForeignKeyConstraint constraintName="fk_medicamento_id_tipo_medicamento"
 			referencedTableName="TIPO_MEDICAMENTO" referencedColumnNames="id"
 			baseTableName="MEDICAMENTO" baseColumnNames="id_tipo_medicamento" />
-
-		<addForeignKeyConstraint constraintName="fk_tratamiento_id_enfermedad"
-			referencedTableName="ENFERMEDAD" referencedColumnNames="id"
-			baseTableName="TRATAMIENTO" baseColumnNames="id_enfermedad" />
 			
 		<addForeignKeyConstraint constraintName="fk_tratamiento_id_medicamento"
 			referencedTableName="MEDICAMENTO" referencedColumnNames="id"
@@ -115,8 +108,8 @@
 		<addUniqueConstraint constraintName="u_enfermedad_medicamento_id_enfermedad_id_medicamento"
             tableName="ENFERMEDAD_MEDICAMENTO" columnNames="id_enfermedad, id_medicamento" />
             
-		<addUniqueConstraint constraintName="u_tratamiento_id_receta_id_enfermedad_id_medicamento"
-            tableName="TRATAMIENTO" columnNames="id_receta, id_enfermedad, id_medicamento" />
+		<addUniqueConstraint constraintName="u_tratamiento_id_receta_id_medicamento"
+            tableName="TRATAMIENTO" columnNames="id_receta, id_medicamento" />
 
 	</changeSet>
 </databaseChangeLog>

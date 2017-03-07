@@ -19,7 +19,6 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.cic.curso.curso17.ejercicio028.modelo.Enfermedad;
 import es.cic.curso.curso17.ejercicio028.modelo.Medicamento;
 import es.cic.curso.curso17.ejercicio028.modelo.Receta;
 import es.cic.curso.curso17.ejercicio028.modelo.TipoMedicamento;
@@ -41,16 +40,6 @@ public class RepositorioTratamientoTest {
 	protected EntityManager em;
 	
 	private Receta receta;
-
-	private Enfermedad generaEnfermedadPrueba() {
-		Enfermedad elemento = new Enfermedad();
-		elemento.setNombre("enfermedad");
-		elemento.setCie10("U00-U99");
-		elemento.setDescripcion("descripción de la enfermedad");
-		em.persist(elemento);
-		em.flush();
-		return elemento;
-	}
 	
 	private Receta generaReceta() {
 		Receta elemento = new Receta();
@@ -82,7 +71,6 @@ public class RepositorioTratamientoTest {
 	private Tratamiento generaElementoPrueba() {
 		Tratamiento elemento = new Tratamiento();
 		elemento.setReceta(receta);
-		elemento.setEnfermedad(generaEnfermedadPrueba());
 		elemento.setMedicamento(generaMedicamentoPrueba());
 		em.persist(elemento);
 		em.flush();
@@ -98,7 +86,6 @@ public class RepositorioTratamientoTest {
 	public void testCreate() {		
 		Tratamiento elemento  = new Tratamiento();
 		elemento.setReceta(receta);
-		elemento.setEnfermedad(generaEnfermedadPrueba());
 		elemento.setMedicamento(generaMedicamentoPrueba());
 		sut.create(elemento);
 		assertNotNull(elemento.getId());

@@ -16,6 +16,7 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.transaction.annotation.Transactional;
 
 import es.cic.curso.curso17.ejercicio028.dto.EnfermedadDTO;
+import es.cic.curso.curso17.ejercicio028.dto.MedicamentoDTO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:es/cic/curso/curso17/ejercicio028/applicationContext.xml" })
@@ -59,6 +60,28 @@ public class ServicioEnfermedadTest {
 	@Test
 	public void testListaEnfermedades() {
 		List<EnfermedadDTO> lista = sut.listaEnfermedades();
+	}
+
+	@Ignore
+	@Test
+	public void testAgregaMedicacion() {
+		Long id = null;
+		List<MedicamentoDTO> lista = null;
+		sut.agregaMedicacion(id, lista);
+	}
+
+	@Ignore
+	@Test
+	public void testEliminaTotalMedicacion() {
+		Long id = null;
+		List<MedicamentoDTO> lista = sut.eliminaTotalMedicacion(id);
+	}
+
+	@Ignore
+	@Test
+	public void testListaMedicacion() {
+		Long id = null;
+		List<MedicamentoDTO> lista = sut.listaMedicacion(id);
 	}
 
 }

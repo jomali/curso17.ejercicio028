@@ -24,11 +24,6 @@ public class Tratamiento implements Cloneable, Identificable<Long> {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Receta receta;
 
-	/** Referencia a la enfermedad. */
-	@JoinColumn(name = "id_enfermedad")
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Enfermedad enfermedad;
-
 	/** Referencia al tipo de medicamento. */
 	@JoinColumn(name = "id_medicamento")
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -47,13 +42,6 @@ public class Tratamiento implements Cloneable, Identificable<Long> {
 	 */
 	public Receta getReceta() {
 		return receta;
-	}
-
-	/**
-	 * @return the enfermedad
-	 */
-	public Enfermedad getEnfermedad() {
-		return enfermedad;
 	}
 
 	/**
@@ -81,14 +69,6 @@ public class Tratamiento implements Cloneable, Identificable<Long> {
 	}
 
 	/**
-	 * @param enfermedad
-	 *            the enfermedad to set
-	 */
-	public void setEnfermedad(Enfermedad enfermedad) {
-		this.enfermedad = enfermedad;
-	}
-
-	/**
 	 * @param medicamento
 	 *            the medicamento to set
 	 */
@@ -100,7 +80,6 @@ public class Tratamiento implements Cloneable, Identificable<Long> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((enfermedad == null) ? 0 : enfermedad.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((medicamento == null) ? 0 : medicamento.hashCode());
 		return result;
@@ -115,11 +94,6 @@ public class Tratamiento implements Cloneable, Identificable<Long> {
 		if (getClass() != obj.getClass())
 			return false;
 		Tratamiento other = (Tratamiento) obj;
-		if (enfermedad == null) {
-			if (other.enfermedad != null)
-				return false;
-		} else if (!enfermedad.equals(other.enfermedad))
-			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -140,8 +114,8 @@ public class Tratamiento implements Cloneable, Identificable<Long> {
 	 */
 	@Override
 	public String toString() {
-		return "Tratamiento [id=" + id + ", id_receta=" + receta.getId() + ", id_enfermedad=" + enfermedad.getId()
-				+ ", id_medicamento=" + medicamento.getId() + "]";
+		return "Tratamiento [id=" + id + ", id_receta=" + receta.getId() + ", id_medicamento=" + medicamento.getId()
+				+ "]";
 	}
 
 }

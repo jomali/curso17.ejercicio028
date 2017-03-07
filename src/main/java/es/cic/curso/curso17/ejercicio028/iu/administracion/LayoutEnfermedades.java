@@ -28,7 +28,6 @@ import es.cic.curso.curso17.ejercicio028.dto.EnfermedadDTO;
 import es.cic.curso.curso17.ejercicio028.dto.MedicamentoDTO;
 import es.cic.curso.curso17.ejercicio028.iu.VistaAdministracion;
 import es.cic.curso.curso17.ejercicio028.servicio.ServicioEnfermedad;
-import es.cic.curso.curso17.ejercicio028.servicio.ServicioMedicacion;
 import es.cic.curso.curso17.ejercicio028.servicio.ServicioMedicamento;
 
 public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
@@ -43,9 +42,6 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 
 	/** Lógica de negocio con acceso a BB.DD.: medicamentos */
 	private ServicioMedicamento servicioMedicamento;
-
-	/** Lógica de negocio con acceso a BB.DD.: medicación recomendada */
-	private ServicioMedicacion servicioMedicacion;
 
 	private TextField textFieldNombre;
 
@@ -63,7 +59,6 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		super(padre, POSICION_DIVISOR);
 		servicioEnfermedad = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioEnfermedad.class);
 		servicioMedicamento = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioMedicamento.class);
-		servicioMedicacion = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioMedicacion.class);
 		refrescaDatos();
 	}
 
@@ -242,8 +237,8 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 			// Agregar elemento:
 			if (elementoSeleccionado == null) {
 				Long id = servicioEnfermedad.agregaEnfermedad(nuevaEnfermedad);
-				servicioMedicacion.eliminaPorEnfermedad(id);
-				servicioMedicacion.agregaPorEnfermedad(id, medicacionRecomendada);
+				servicioEnfermedad.eliminaTotalMedicacion(id);
+				servicioEnfermedad.agregaMedicacion(id, medicacionRecomendada);
 				botonAgrega.setEnabled(true);
 				botonEdita.setEnabled(false);
 				botonElimina.setEnabled(false);
@@ -253,8 +248,8 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 			// Editar elemento:
 			else {
 				servicioEnfermedad.modificaEnfermedad(elementoSeleccionado.getId(), nuevaEnfermedad);
-				servicioMedicacion.eliminaPorEnfermedad(elementoSeleccionado.getId());
-				servicioMedicacion.agregaPorEnfermedad(elementoSeleccionado.getId(), medicacionRecomendada);
+				servicioEnfermedad.eliminaTotalMedicacion(elementoSeleccionado.getId());
+				servicioEnfermedad.agregaMedicacion(elementoSeleccionado.getId(), medicacionRecomendada);
 				elementoSeleccionado = null;
 				botonAgrega.setEnabled(false);
 				botonEdita.setEnabled(true);
@@ -328,7 +323,7 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 
 	public void refrescaDatos() {
 		this.medicacionRecomendada = (elementoSeleccionado == null) ? new ArrayList<>()
-				: servicioMedicacion.listaPorEnfermedad(elementoSeleccionado.getId());
+				: servicioEnfermedad.listaMedicacion(elementoSeleccionado.getId());
 		textFieldMedicacion.setValue(listaMedicacion(medicacionRecomendada));
 	}
 

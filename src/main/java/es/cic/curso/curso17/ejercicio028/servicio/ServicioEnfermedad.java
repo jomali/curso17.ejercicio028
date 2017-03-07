@@ -3,6 +3,7 @@ package es.cic.curso.curso17.ejercicio028.servicio;
 import java.util.List;
 
 import es.cic.curso.curso17.ejercicio028.dto.EnfermedadDTO;
+import es.cic.curso.curso17.ejercicio028.dto.MedicamentoDTO;
 
 public interface ServicioEnfermedad {
 
@@ -15,5 +16,11 @@ public interface ServicioEnfermedad {
 	EnfermedadDTO eliminaEnfermedad(Long id);
 
 	List<EnfermedadDTO> listaEnfermedades();
+
+	void agregaMedicacion(Long idEnfermedad, List<MedicamentoDTO> medicacionRecomendada);
+	
+	List<MedicamentoDTO> eliminaTotalMedicacion(Long idEnfermedad);
+	
+	List<MedicamentoDTO> listaMedicacion(Long idEnfermedad);
 
 }
