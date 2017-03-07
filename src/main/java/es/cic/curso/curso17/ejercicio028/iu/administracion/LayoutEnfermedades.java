@@ -16,6 +16,7 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
+
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -35,6 +36,8 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 
 	public static final float POSICION_DIVISOR = 35.0F;
 
+	public static final int MAX_MENSAJE_MEDICACION = 60;
+
 	/** Lógica de negocio con acceso a BB.DD.: enfermedades */
 	private ServicioEnfermedad servicioEnfermedad;
 
@@ -47,6 +50,8 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 	private TextField textFieldNombre;
 
 	private TextField textFieldCie10;
+
+	private TextField textFieldMedicacion;
 
 	private List<MedicamentoDTO> medicacionRecomendada;
 
@@ -99,6 +104,7 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 			for (Object obj : seleccion) {
 				medicacionRecomendada.add((MedicamentoDTO) obj);
 			}
+			textFieldMedicacion.setValue(listaMedicacion(medicacionRecomendada));
 			resultado.close();
 		});
 
@@ -137,6 +143,23 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		return resultado;
 	}
 
+	private String listaMedicacion(List<MedicamentoDTO> listaMedicacion) {
+		String resultado = "";
+		if (listaMedicacion.isEmpty()) {
+			resultado = "No hay medicación recomendada.";
+		} else {
+			resultado += listaMedicacion.get(0).getNombre();
+			for (int i = 1; i < listaMedicacion.size(); i++) {
+				resultado += ", " + listaMedicacion.get(i).getNombre();
+			}
+			if (resultado.length() > MAX_MENSAJE_MEDICACION) {
+				resultado = resultado.substring(0, MAX_MENSAJE_MEDICACION);
+				resultado += "...";
+			}
+		}
+		return resultado;
+	}
+
 	@Override
 	protected String obtenDescripcionElementoSeleccionado() {
 		return elementoSeleccionado.getNombre();
@@ -167,6 +190,7 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		textFieldNombre.setNullRepresentation("");
 		textFieldNombre.setNullSettingAllowed(false);
 		textFieldNombre.setRequired(true);
+		textFieldNombre.setRequiredError("Es necesario especificar un nombre");
 		textFieldNombre.setSizeFull();
 		textFieldNombre.addTextChangeListener(e -> botonAcepta.setEnabled(true));
 
@@ -176,11 +200,21 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		textFieldCie10.setNullRepresentation("");
 		textFieldCie10.setNullSettingAllowed(false);
 		textFieldCie10.setRequired(true);
+		textFieldCie10.setRequiredError("Es necesario especificar un código CIE-10");
 		textFieldCie10.setSizeFull();
 		textFieldCie10.addTextChangeListener(e -> botonAcepta.setEnabled(true));
 
+		// TextField : MEDICACIÓN RECOMENDADA
+		textFieldMedicacion = new TextField("Medicación:");
+		textFieldMedicacion.setEnabled(false);
+		textFieldMedicacion.setInputPrompt("Medicación recomendada");
+		textFieldMedicacion.setNullRepresentation("");
+		textFieldMedicacion.setNullSettingAllowed(false);
+		textFieldMedicacion.setSizeFull();
+		textFieldMedicacion.addTextChangeListener(e -> botonAcepta.setEnabled(true));
+
 		// Button : MEDICACIÓN RECOMENDADA
-		Button botonMedicacion = new Button("Medicación recomendada");
+		Button botonMedicacion = new Button("Selecciona medicación");
 		botonMedicacion.setDescription("Selecciona la medicación recomendada");
 		botonMedicacion.setStyleName("link");
 		botonMedicacion.addClickListener(e -> this.getUI().getUI().addWindow(creaVentanaMedicacionRecomendada()));
@@ -251,6 +285,7 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 
 		layoutFormulario.addComponent(textFieldNombre);
 		layoutFormulario.addComponent(textFieldCie10);
+		layoutFormulario.addComponent(textFieldMedicacion);
 		layoutFormulario.addComponent(botonMedicacion);
 		layoutFormulario.addComponent(textAreaDescripcion);
 		layoutFormulario.addComponent(layoutBotonesFormulario);
@@ -294,6 +329,7 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 	public void refrescaDatos() {
 		this.medicacionRecomendada = (elementoSeleccionado == null) ? new ArrayList<>()
 				: servicioMedicacion.listaPorEnfermedad(elementoSeleccionado.getId());
+		textFieldMedicacion.setValue(listaMedicacion(medicacionRecomendada));
 	}
 
 }
