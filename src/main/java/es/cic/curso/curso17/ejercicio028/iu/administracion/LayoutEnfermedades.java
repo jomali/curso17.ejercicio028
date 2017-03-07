@@ -60,6 +60,10 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		servicioEnfermedad = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioEnfermedad.class);
 		servicioMedicamento = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioMedicamento.class);
 		refrescaDatos();
+		// XXX - Filtro
+		textFieldFiltro.addTextChangeListener(e -> grid.setContainerDataSource(
+				new BeanItemContainer<>(EnfermedadDTO.class, servicioEnfermedad.listaAlVuelo(e.getText()))));
+		botonLimpiaSeleccion.addClickListener(e -> cargaGrid());
 	}
 
 	private Window creaVentanaMedicacionRecomendada() {

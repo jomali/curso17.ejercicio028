@@ -6,7 +6,7 @@ import es.cic.curso.curso17.ejercicio028.dto.MedicamentoDTO;
 
 public interface ServicioMedicamento {
 
-	void agregaMedicamento(MedicamentoDTO medicamento);
+	Long agregaMedicamento(MedicamentoDTO medicamento);
 
 	MedicamentoDTO obtenMedicamento(Long id);
 
@@ -17,5 +17,7 @@ public interface ServicioMedicamento {
 	List<MedicamentoDTO> listaMedicamentos();
 
 	List<MedicamentoDTO> listaMedicamentosPorTipo(Long idTipoMedicamento);
+	
+	List<MedicamentoDTO> listaAlVuelo(String cadena);
 
 }

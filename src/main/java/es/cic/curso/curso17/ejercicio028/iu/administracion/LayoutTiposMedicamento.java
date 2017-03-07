@@ -38,6 +38,10 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 		super(padre, POSICION_DIVISOR);
 		servicioTipoMedicamento = ContextLoader.getCurrentWebApplicationContext()
 				.getBean(ServicioTipoMedicamento.class);
+		// XXX - Filtro
+		textFieldFiltro.addTextChangeListener(e -> grid.setContainerDataSource(
+				new BeanItemContainer<>(TipoMedicamento.class, servicioTipoMedicamento.listaAlVuelo(e.getText()))));
+		botonLimpiaSeleccion.addClickListener(e -> cargaGrid());
 	}
 
 	private boolean validaFormulario() {

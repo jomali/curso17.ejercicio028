@@ -4,7 +4,9 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
-import org.junit.Ignore;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.transaction.annotation.Transactional;
 
 import es.cic.curso.curso17.ejercicio028.dto.MedicamentoDTO;
+import es.cic.curso.curso17.ejercicio028.modelo.TipoMedicamento;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:es/cic/curso/curso17/ejercicio028/applicationContext.xml" })
@@ -23,49 +26,114 @@ import es.cic.curso.curso17.ejercicio028.dto.MedicamentoDTO;
 @Transactional
 public class ServicioMedicamentoTest {
 
+	public static final int NUMERO_ELEMENTOS = 100;
+
 	@Autowired
 	private ServicioMedicamento sut;
-	
-	@Ignore
+
+	@PersistenceContext
+	protected EntityManager em;
+
+	private TipoMedicamento generaTipoMedicamentoPrueba() {
+		TipoMedicamento elemento = new TipoMedicamento();
+		elemento.setNombre("tipo de medicamento");
+		elemento.setDescripcion("descripción del tipo de medicamento");
+		em.persist(elemento);
+		em.flush();
+		return elemento;
+	}
+
+	private Long creaElementoPrueba(String nombre, TipoMedicamento tipo) {
+		MedicamentoDTO elemento = new MedicamentoDTO();
+		elemento.setTipo(tipo == null ? generaTipoMedicamentoPrueba() : tipo);
+		elemento.setNombre(nombre == null ? "medicamento" : nombre);
+		elemento.setDescripcion("descripción del medicamento");
+		return sut.agregaMedicamento(elemento);
+	}
+
 	@Test
 	public void testAgregaMedicamento() {
-		MedicamentoDTO medicamento = null;
-		sut.agregaMedicamento(medicamento);
+		MedicamentoDTO elemento = new MedicamentoDTO();
+		elemento.setNombre("medicamento");
+		elemento.setTipo(generaTipoMedicamentoPrueba());
+		Long resultado = sut.agregaMedicamento(elemento);
+		assertNotNull(resultado);
 	}
 
-	@Ignore
 	@Test
 	public void testObtenMedicamento() {
-		Long id = null;
-		MedicamentoDTO resultado = sut.obtenMedicamento(id);
+		MedicamentoDTO resultado;
+
+		try {
+			@SuppressWarnings("unused")
+			MedicamentoDTO otro = sut.obtenMedicamento(0L);
+			fail("No deberían existir elementos con el ID pasado");
+		} catch (IllegalArgumentException iae) {
+
+		}
+
+		Long id = creaElementoPrueba(null, null);
+		resultado = sut.obtenMedicamento(id);
+		assertTrue(id.equals(resultado.getId()));
 	}
 
-	@Ignore
+	@Test
+	public void testModificaEnfermedad() {
+	}
+
 	@Test
 	public void testModificaMedicamento() {
-		Long id = null;
-		MedicamentoDTO medicamento = null;
-		MedicamentoDTO resultado = sut.modificaMedicamento(id, medicamento);
+		Long id = creaElementoPrueba(null, null);
+
+		MedicamentoDTO resultado1 = sut.obtenMedicamento(id);
+		assertTrue("medicamento".equals(resultado1.getNombre()));
+		resultado1.setNombre("modificado");
+		sut.modificaMedicamento(id, resultado1);
+
+		MedicamentoDTO resultado2 = sut.obtenMedicamento(id);
+		assertTrue("modificado".equals(resultado2.getNombre()));
 	}
 
-	@Ignore
 	@Test
 	public void testEliminaMedicamento() {
-		Long id = null;
-		MedicamentoDTO resultado = sut.eliminaMedicamento(id);
+		MedicamentoDTO resultado;
+		Long id = creaElementoPrueba(null, null);
+
+		resultado = sut.obtenMedicamento(id);
+		assertNotNull(resultado);
+
+		sut.eliminaMedicamento(id);
+		try {
+			resultado = sut.obtenMedicamento(id);
+			fail("El elemento no debería existir en el sistema");
+		} catch (IllegalArgumentException iae) {
+
+		}
 	}
 
-	@Ignore
 	@Test
 	public void testListaMedicamentos() {
-		List<MedicamentoDTO> lista = sut.listaMedicamentos();
+		TipoMedicamento tipo = generaTipoMedicamentoPrueba();
+		for (int i = 0; i < NUMERO_ELEMENTOS; i++) {
+			creaElementoPrueba("" + (i * 1), tipo);
+		}
+		List<MedicamentoDTO> lista = sut.listaMedicamentosPorTipo(tipo.getId());
+		assertEquals(NUMERO_ELEMENTOS, lista.size());
 	}
 
-	@Ignore
 	@Test
 	public void testListaMedicamentosPorTipo() {
-		Long id = null;
-		List<MedicamentoDTO> lista = sut.listaMedicamentosPorTipo(id);
+		TipoMedicamento tipo1 = generaTipoMedicamentoPrueba();
+		TipoMedicamento tipo2 = generaTipoMedicamentoPrueba();
+		for (int i = 0; i < NUMERO_ELEMENTOS; i++) {
+			creaElementoPrueba("" + (i * 1), tipo1);
+			creaElementoPrueba("" + (i * 1000), tipo1);
+			creaElementoPrueba("" + (i * 2000), tipo2);
+		}
+		List<MedicamentoDTO> lista1 = sut.listaMedicamentosPorTipo(tipo1.getId());
+		List<MedicamentoDTO> lista2 = sut.listaMedicamentosPorTipo(tipo2.getId());
+		assertEquals(NUMERO_ELEMENTOS * 2, lista1.size());
+		assertEquals(NUMERO_ELEMENTOS, lista2.size());
 	}
 
 }

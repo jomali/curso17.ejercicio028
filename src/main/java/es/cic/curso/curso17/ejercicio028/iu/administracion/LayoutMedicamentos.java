@@ -50,6 +50,10 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 		servicioTipoMedicamento = ContextLoader.getCurrentWebApplicationContext()
 				.getBean(ServicioTipoMedicamento.class);
 		cargaComboBox();
+		// XXX - Filtro
+		textFieldFiltro.addTextChangeListener(e -> grid.setContainerDataSource(
+				new BeanItemContainer<>(MedicamentoDTO.class, servicioMedicamento.listaAlVuelo(e.getText()))));
+		botonLimpiaSeleccion.addClickListener(e -> cargaGrid());
 	}
 
 	private boolean validaFormulario() {
