@@ -12,6 +12,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
 import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
@@ -20,6 +21,8 @@ import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.VerticalSplitPanel;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Notification.Type;
 
@@ -32,6 +35,9 @@ import es.cic.curso.curso17.ejercicio028.servicio.ServicioMedicamento;
 
 public class VistaNuevaReceta extends VerticalLayout implements View {
 	private static final long serialVersionUID = -8229167069516384540L;
+
+	protected static final float ANCHO_VENTANA_CONFIRMACION = 420.0F; // px
+	protected static final float ALTO_VENTANA_CONFIRMACION = 260.0F; // px
 
 	public static final String TITULO = "Nueva Receta";
 
@@ -69,13 +75,13 @@ public class VistaNuevaReceta extends VerticalLayout implements View {
 	private VerticalLayout inicializaLayoutContenido() {
 		gridEnfermedades = creaGridEnfermedades();
 		gridMedicamentos = creaGridMedicamentos();
-		
+
 		VerticalLayout layoutEnfermedades = new VerticalLayout();
 		layoutEnfermedades.setMargin(new MarginInfo(false, true, false, false));
 		layoutEnfermedades.setSizeFull();
 		layoutEnfermedades.setSpacing(true);
 		layoutEnfermedades.addComponent(gridEnfermedades);
-		
+
 		VerticalLayout layoutMedicamentos = new VerticalLayout();
 		layoutMedicamentos.setMargin(new MarginInfo(false, false, false, true));
 		layoutMedicamentos.setSizeFull();
@@ -147,7 +153,7 @@ public class VistaNuevaReceta extends VerticalLayout implements View {
 
 		return layoutMigasDePan;
 	}
-	
+
 	private Grid creaGridEnfermedades() {
 		Grid gridEnfermedades = new Grid();
 		gridEnfermedades.setColumns("nombre", "cie10");
@@ -155,7 +161,7 @@ public class VistaNuevaReceta extends VerticalLayout implements View {
 		gridEnfermedades.setSizeFull();
 		return gridEnfermedades;
 	}
-	
+
 	private Grid creaGridMedicamentos() {
 		Grid gridMedicamentos = new Grid();
 		gridMedicamentos.setColumns("nombre", "nombreTipo");
@@ -165,13 +171,17 @@ public class VistaNuevaReceta extends VerticalLayout implements View {
 			Collection<Object> seleccionEnfermedades = gridEnfermedades.getSelectedRows();
 			Collection<Object> seleccionMedicamentos = e.getAdded();
 			// XXX - Ejemplo de uso de Streams en Java8
-			List<EnfermedadDTO> enfermedades = seleccionEnfermedades.stream().filter(obj -> obj instanceof EnfermedadDTO)
-					.map(obj -> (EnfermedadDTO) obj).collect(Collectors.toList());
-			List<MedicamentoDTO> medicamentos = seleccionMedicamentos.stream().filter(obj -> obj instanceof MedicamentoDTO)
-					.map(obj -> (MedicamentoDTO) obj).collect(Collectors.toList());
+			List<EnfermedadDTO> enfermedades = seleccionEnfermedades.stream()
+					.filter(obj -> obj instanceof EnfermedadDTO).map(obj -> (EnfermedadDTO) obj)
+					.collect(Collectors.toList());
+			List<MedicamentoDTO> medicamentos = seleccionMedicamentos.stream()
+					.filter(obj -> obj instanceof MedicamentoDTO).map(obj -> (MedicamentoDTO) obj)
+					.collect(Collectors.toList());
 			for (MedicamentoDTO medicamento : medicamentos) {
 				if (!servicioGestorRecetas.comprueba(enfermedades, medicamento)) {
-					Notification.show("Medicamento incorrecto: " + medicamento.getNombre() + ".", Type.WARNING_MESSAGE);
+					this.getUI().getUI().addWindow(creaVentanaAdvertencia(medicamento));
+					// Notification.show("Medicamento incorrecto: " +
+					// medicamento.getNombre() + ".", Type.WARNING_MESSAGE);
 				}
 			}
 		});
@@ -183,6 +193,53 @@ public class VistaNuevaReceta extends VerticalLayout implements View {
 		Collection<MedicamentoDTO> medicamentos = servicioMedicamento.listaMedicamentos();
 		gridEnfermedades.setContainerDataSource(new BeanItemContainer<>(EnfermedadDTO.class, enfermedades));
 		gridMedicamentos.setContainerDataSource(new BeanItemContainer<>(MedicamentoDTO.class, medicamentos));
+	}
+
+	private Window creaVentanaAdvertencia(MedicamentoDTO medicamento) {
+		Window resultado = new Window("Aviso");
+		resultado.setModal(true);
+		resultado.setClosable(false);
+		resultado.setResizable(false);
+		resultado.setDraggable(false);
+		resultado.setHeight(ALTO_VENTANA_CONFIRMACION, Unit.PIXELS);
+		resultado.setWidth(ANCHO_VENTANA_CONFIRMACION, Unit.PIXELS);
+
+		Label label = new Label(
+				"Ha indicado una medicación que no está recomendada para el cuadro presentado por el paciente:<br><br><strong>\""
+						+ medicamento.getNombre() + "\"</strong>");
+		label.setContentMode(ContentMode.HTML);
+
+		VerticalLayout layoutContenido = new VerticalLayout();
+		layoutContenido.setMargin(new MarginInfo(false, true, false, true));
+		layoutContenido.setSpacing(false);
+		layoutContenido.setSizeFull();
+		layoutContenido.addComponent(label);
+
+		Button botonAceptar = new Button("Aceptar");
+		botonAceptar.addClickListener(e -> resultado.close());
+
+		Button botonCancelar = new Button("Cancelar");
+		botonCancelar.addClickListener(e -> {
+			gridMedicamentos.deselect(medicamento);
+			resultado.close();
+		});
+
+		HorizontalLayout layoutBotones = new HorizontalLayout();
+		layoutBotones.setMargin(new MarginInfo(false, true, false, true));
+		layoutBotones.setSpacing(true);
+		layoutBotones.setHeight(100.0F, Unit.PERCENTAGE);
+		layoutBotones.setDefaultComponentAlignment(Alignment.MIDDLE_RIGHT);
+		layoutBotones.addComponents(botonAceptar, botonCancelar);
+
+		VerticalSplitPanel layoutPrincipal = new VerticalSplitPanel();
+		layoutPrincipal.setSplitPosition(90.0F, Unit.PIXELS, true);
+		layoutPrincipal.setLocked(true);
+		layoutPrincipal.setFirstComponent(layoutContenido);
+		layoutPrincipal.setSecondComponent(layoutBotones);
+
+		resultado.setContent(layoutPrincipal);
+		resultado.center();
+		return resultado;
 	}
 
 	@Override
