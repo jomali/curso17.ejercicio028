@@ -70,7 +70,7 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 		Grid grid = new Grid();
 		grid.setColumns("nombre");
 		grid.addSelectionListener(e -> {
-			elementoSeleccionado = (e.getSelected().isEmpty()) ? null
+			elementoSeleccionado = e.getSelected().isEmpty() ? null
 					: (TipoMedicamento) e.getSelected().iterator().next();
 			cargaFormulario(elementoSeleccionado);
 		});

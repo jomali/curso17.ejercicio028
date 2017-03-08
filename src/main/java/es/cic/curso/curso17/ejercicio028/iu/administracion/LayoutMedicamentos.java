@@ -77,7 +77,7 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 		Grid grid = new Grid();
 		grid.setColumns("nombre", "nombreTipo");
 		grid.addSelectionListener(e -> {
-			elementoSeleccionado = (e.getSelected().isEmpty()) ? null
+			elementoSeleccionado = e.getSelected().isEmpty() ? null
 					: (MedicamentoDTO) e.getSelected().iterator().next();
 			cargaFormulario(elementoSeleccionado);
 		});

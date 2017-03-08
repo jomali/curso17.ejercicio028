@@ -155,19 +155,19 @@ public class VistaNuevaReceta extends VerticalLayout implements View {
 	}
 
 	private Grid creaGridEnfermedades() {
-		Grid gridEnfermedades = new Grid();
-		gridEnfermedades.setColumns("nombre", "cie10");
-		gridEnfermedades.setSelectionMode(SelectionMode.MULTI);
-		gridEnfermedades.setSizeFull();
-		return gridEnfermedades;
+		Grid resultado = new Grid();
+		resultado.setColumns("nombre", "cie10");
+		resultado.setSelectionMode(SelectionMode.MULTI);
+		resultado.setSizeFull();
+		return resultado;
 	}
 
 	private Grid creaGridMedicamentos() {
-		Grid gridMedicamentos = new Grid();
-		gridMedicamentos.setColumns("nombre", "nombreTipo");
-		gridMedicamentos.setSelectionMode(SelectionMode.MULTI);
-		gridMedicamentos.setSizeFull();
-		gridMedicamentos.addSelectionListener(e -> {
+		Grid resultado = new Grid();
+		resultado.setColumns("nombre", "nombreTipo");
+		resultado.setSelectionMode(SelectionMode.MULTI);
+		resultado.setSizeFull();
+		resultado.addSelectionListener(e -> {
 			Collection<Object> seleccionEnfermedades = gridEnfermedades.getSelectedRows();
 			Collection<Object> seleccionMedicamentos = e.getAdded();
 			// XXX - Ejemplo de uso de Streams en Java8
@@ -180,12 +180,10 @@ public class VistaNuevaReceta extends VerticalLayout implements View {
 			for (MedicamentoDTO medicamento : medicamentos) {
 				if (!servicioGestorRecetas.comprueba(enfermedades, medicamento)) {
 					this.getUI().getUI().addWindow(creaVentanaAdvertencia(medicamento));
-					// Notification.show("Medicamento incorrecto: " +
-					// medicamento.getNombre() + ".", Type.WARNING_MESSAGE);
 				}
 			}
 		});
-		return gridMedicamentos;
+		return resultado;
 	}
 
 	private void cargaGrids() {
