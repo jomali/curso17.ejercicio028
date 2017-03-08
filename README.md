@@ -23,9 +23,9 @@ La vista de administración permite **añadir**,  **editar** y **eliminar** cada
 
 En este caso, la vista es sólo un prototipo para mostrar el tipo de funcionalidad que se podría implementar en el sistema. El propósito de esta vista sería el de crear nuevas recetas.
 
-Una **receta** consiste en una lista de medicamentos.
++ **RECETA**. Cada receta consta de una *lista de medicamentos*.
 
-El sistema utiliza, además, la información de enfermedades y sus medicaciones recomendadas para informar al usuario en caso de que para un conjunto de enfermedades seleccionado (el que sería el cuadro clínico presentado por el enfermo), se intente recetar un medicamento no recomendado.
+El sistema utiliza, además, la información de **enfermedades** y sus **medicaciones recomendadas** para informar al usuario en caso de que para un conjunto de enfermedades seleccionado (el que sería el cuadro clínico presentado por el enfermo), se intente recetar un medicamento no recomendado.
 
 Quedaría pendiente extender el sistema para poder incluir información de los enfermos con sus respectivos cuadros clínicos. Una vez extendido el sistema, se debería replantear la interfaz.
 
