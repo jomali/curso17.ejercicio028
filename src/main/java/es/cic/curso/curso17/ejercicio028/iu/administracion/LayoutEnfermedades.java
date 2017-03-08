@@ -3,6 +3,7 @@ package es.cic.curso.curso17.ejercicio028.iu.administracion;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.web.context.ContextLoader;
 
@@ -61,9 +62,9 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		servicioMedicamento = ContextLoader.getCurrentWebApplicationContext().getBean(ServicioMedicamento.class);
 		refrescaDatos();
 		// XXX - Filtro
-		textFieldFiltro.addTextChangeListener(e -> grid.setContainerDataSource(
-				new BeanItemContainer<>(EnfermedadDTO.class, servicioEnfermedad.listaAlVuelo(e.getText()))));
-		botonLimpiaSeleccion.addClickListener(e -> cargaGrid());
+		textFieldFiltro.addTextChangeListener(e -> cargaGrid(elementosGrid.stream().parallel()
+				.filter(obj -> obj.getNombre().contains(e.getText())).sequential().collect(Collectors.toList())));
+		botonLimpiaSeleccion.addClickListener(e -> cargaGrid(elementosGrid));
 	}
 
 	private Window creaVentanaMedicacionRecomendada() {
@@ -262,7 +263,7 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 						String.format("Entrada modificada: <strong>\"%s\"</strong>", nuevaEnfermedad.getNombre()), "",
 						Type.TRAY_NOTIFICATION, true).show(Page.getCurrent());
 			}
-			cargaGrid();
+			cargaGrid(null);
 			cargaFormulario(elementoSeleccionado);
 		});
 
@@ -297,7 +298,7 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 		botonAceptar.addClickListener(e -> {
 			String nombre = elementoSeleccionado.getNombre();
 			servicioEnfermedad.eliminaEnfermedad(elementoSeleccionado.getId());
-			cargaGrid();
+			cargaGrid(null);
 			ventana.close();
 			new Notification(String.format("Entrada eliminada: <strong>\"%s\"</strong>", nombre), "",
 					Type.TRAY_NOTIFICATION, true).show(Page.getCurrent());
@@ -320,8 +321,12 @@ public class LayoutEnfermedades extends LayoutAbstracto<EnfermedadDTO> {
 	}
 
 	@Override
-	public void cargaGrid() {
-		Collection<EnfermedadDTO> elementos = servicioEnfermedad.listaEnfermedades();
+	public void cargaGrid(Collection<EnfermedadDTO> elementos) {
+		if (elementos == null) {
+			textFieldFiltro.clear();
+			elementosGrid = servicioEnfermedad.listaEnfermedades();
+			elementos = elementosGrid;
+		}
 		grid.setContainerDataSource(new BeanItemContainer<>(EnfermedadDTO.class, elementos));
 	}
 

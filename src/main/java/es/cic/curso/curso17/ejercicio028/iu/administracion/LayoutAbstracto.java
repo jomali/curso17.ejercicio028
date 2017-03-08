@@ -1,5 +1,7 @@
 package es.cic.curso.curso17.ejercicio028.iu.administracion;
 
+import java.util.Collection;
+
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -28,6 +30,9 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 
 	/** Referencia a la vista principal. */
 	protected VistaAdministracion padre;
+	
+	/** Colección de elementos cragados en el grid. */
+	protected Collection<K> elementosGrid;
 
 	/** Referencia al elemento seleccionado en el grid. */
 	protected K elementoSeleccionado;
@@ -245,6 +250,6 @@ public abstract class LayoutAbstracto<K> extends VerticalLayout implements Compo
 
 	protected abstract void cargaFormulario(K elemento);
 
-	public abstract void cargaGrid();
+	public abstract void cargaGrid(Collection<K> elementos);
 
 }

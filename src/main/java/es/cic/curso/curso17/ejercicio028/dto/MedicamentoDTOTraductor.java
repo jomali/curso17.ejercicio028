@@ -15,7 +15,7 @@ public class MedicamentoDTOTraductor implements Traductor<Medicamento, Medicamen
 		MedicamentoDTO resultado = new MedicamentoDTO();
 		resultado.setId(entidad.getId());
 		resultado.setTipo(entidad.getTipo());
-		resultado.setNombreTipo(entidad.getTipo() == null ? null : entidad.getTipo().getNombre());
+		resultado.setNombreTipo(entidad.getTipo() == null ? "general" : entidad.getTipo().getNombre());
 		resultado.setNombre(entidad.getNombre());
 		resultado.setDescripcion(entidad.getDescripcion());
 		return resultado;

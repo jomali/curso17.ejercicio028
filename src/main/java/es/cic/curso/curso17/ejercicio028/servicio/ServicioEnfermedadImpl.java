@@ -1,7 +1,6 @@
 package es.cic.curso.curso17.ejercicio028.servicio;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -110,15 +109,6 @@ public class ServicioEnfermedadImpl implements ServicioEnfermedad {
 		obtenEntidadEnfermedad(idEnfermedad);
 		List<Medicamento> medicamentos = repositorioMedicamento.listByDisease(idEnfermedad);
 		return traductorMedicamento.traduceAListaDTOs(medicamentos);
-	}
-
-	@Override
-	public List<EnfermedadDTO> listaAlVuelo(String cadena) {
-		return listaEnfermedades().stream()
-				.parallel()
-				.filter(obj -> obj.getNombre().contains(cadena))
-				.sequential()
-				.collect(Collectors.toList());
 	}
 
 }

@@ -18,6 +18,4 @@ public interface ServicioTipoMedicamento {
 	
 	List<TipoMedicamento> listaTiposMedicamentoOrdenada();
 
-	List<TipoMedicamento> listaAlVuelo(String cadena);
-
 }

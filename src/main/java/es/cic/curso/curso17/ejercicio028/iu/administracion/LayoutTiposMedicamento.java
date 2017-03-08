@@ -1,6 +1,7 @@
 package es.cic.curso.curso17.ejercicio028.iu.administracion;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import org.springframework.web.context.ContextLoader;
 
@@ -39,9 +40,9 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 		servicioTipoMedicamento = ContextLoader.getCurrentWebApplicationContext()
 				.getBean(ServicioTipoMedicamento.class);
 		// XXX - Filtro
-		textFieldFiltro.addTextChangeListener(e -> grid.setContainerDataSource(
-				new BeanItemContainer<>(TipoMedicamento.class, servicioTipoMedicamento.listaAlVuelo(e.getText()))));
-		botonLimpiaSeleccion.addClickListener(e -> cargaGrid());
+		textFieldFiltro.addTextChangeListener(e -> cargaGrid(elementosGrid.stream().parallel()
+				.filter(obj -> obj.getNombre().contains(e.getText())).sequential().collect(Collectors.toList())));
+		botonLimpiaSeleccion.addClickListener(e -> cargaGrid(elementosGrid));
 	}
 
 	private boolean validaFormulario() {
@@ -50,6 +51,11 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 			resultado = false;
 			textFieldNombre.focus();
 			Notification.show("Es necesario especificar un nombre.", Type.WARNING_MESSAGE);
+		} else if ("general".equalsIgnoreCase(textFieldNombre.getValue())) {
+			resultado = false;
+			textFieldNombre.clear();
+			textFieldNombre.focus();
+			Notification.show("El nombre 'general' no es un nombre válido.", Type.WARNING_MESSAGE);
 		}
 		return resultado;
 	}
@@ -78,7 +84,7 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 		botonAceptar.addClickListener(e -> {
 			String nombre = elementoSeleccionado.getNombre();
 			servicioTipoMedicamento.eliminaTipoMedicamento(elementoSeleccionado.getId());
-			cargaGrid();
+			cargaGrid(null);
 			ventana.close();
 			new Notification(String.format("Entrada eliminada: <strong>\"%s\"</strong>", nombre), "",
 					Type.TRAY_NOTIFICATION, true).show(Page.getCurrent());
@@ -135,8 +141,8 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 				botonAgrega.setEnabled(true);
 				botonEdita.setEnabled(false);
 				botonElimina.setEnabled(false);
-				new Notification(String.format("Entrada modificada: <strong>\"%s\"</strong>", nuevoTipo.getNombre()), "",
-						Type.TRAY_NOTIFICATION, true).show(Page.getCurrent());
+				new Notification(String.format("Entrada modificada: <strong>\"%s\"</strong>", nuevoTipo.getNombre()),
+						"", Type.TRAY_NOTIFICATION, true).show(Page.getCurrent());
 			}
 			padre.cargaDatos();
 			cargaFormulario(elementoSeleccionado);
@@ -172,10 +178,13 @@ public class LayoutTiposMedicamento extends LayoutAbstracto<TipoMedicamento> {
 	}
 
 	@Override
-	public void cargaGrid() {
-		Collection<TipoMedicamento> elementos = servicioTipoMedicamento.listaTiposMedicamento();
+	public void cargaGrid(Collection<TipoMedicamento> elementos) {
+		if (elementos == null) {
+			textFieldFiltro.clear();
+			elementosGrid = servicioTipoMedicamento.listaTiposMedicamento();
+			elementos = elementosGrid;
+		}
 		grid.setContainerDataSource(new BeanItemContainer<>(TipoMedicamento.class, elementos));
-
 	}
 
 }

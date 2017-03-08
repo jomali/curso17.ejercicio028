@@ -18,6 +18,4 @@ public interface ServicioMedicamento {
 
 	List<MedicamentoDTO> listaMedicamentosPorTipo(Long idTipoMedicamento);
 	
-	List<MedicamentoDTO> listaAlVuelo(String cadena);
-
 }

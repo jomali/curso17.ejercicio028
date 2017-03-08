@@ -1,7 +1,6 @@
 package es.cic.curso.curso17.ejercicio028.servicio;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,12 +60,6 @@ public class ServicioTipoMedicamentoImpl implements ServicioTipoMedicamento {
 		tipoVacio.setId(-1L);
 		resultado.add(0, tipoVacio);
 		return resultado;
-	}
-
-	@Override
-	public List<TipoMedicamento> listaAlVuelo(String cadena) {
-		return listaTiposMedicamento().stream().parallel().filter(obj -> obj.getNombre().contains(cadena)).sequential()
-				.collect(Collectors.toList());
 	}
 
 }

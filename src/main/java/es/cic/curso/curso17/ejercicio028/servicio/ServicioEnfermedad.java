@@ -23,6 +23,4 @@ public interface ServicioEnfermedad {
 	
 	List<MedicamentoDTO> listaMedicacion(Long idEnfermedad);
 	
-	List<EnfermedadDTO> listaAlVuelo(String cadena);
-
 }

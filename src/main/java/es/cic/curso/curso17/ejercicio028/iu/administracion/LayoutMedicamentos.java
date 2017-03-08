@@ -2,6 +2,7 @@ package es.cic.curso.curso17.ejercicio028.iu.administracion;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.web.context.ContextLoader;
 
@@ -51,9 +52,9 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 				.getBean(ServicioTipoMedicamento.class);
 		cargaComboBox();
 		// XXX - Filtro
-		textFieldFiltro.addTextChangeListener(e -> grid.setContainerDataSource(
-				new BeanItemContainer<>(MedicamentoDTO.class, servicioMedicamento.listaAlVuelo(e.getText()))));
-		botonLimpiaSeleccion.addClickListener(e -> cargaGrid());
+		textFieldFiltro.addTextChangeListener(e -> cargaGrid(elementosGrid.stream().parallel()
+				.filter(obj -> obj.getNombre().contains(e.getText())).sequential().collect(Collectors.toList())));
+		botonLimpiaSeleccion.addClickListener(e -> cargaGrid(elementosGrid));
 	}
 
 	private boolean validaFormulario() {
@@ -133,7 +134,7 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 			// Agregar elemento:
 			if (elementoSeleccionado == null) {
 				servicioMedicamento.agregaMedicamento(nuevoMedicamento);
-				cargaGrid();
+				cargaGrid(null);
 				botonAgrega.setEnabled(true);
 				botonEdita.setEnabled(false);
 				botonElimina.setEnabled(false);
@@ -144,7 +145,7 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 			// Editar elemento:
 			else {
 				servicioMedicamento.modificaMedicamento(elementoSeleccionado.getId(), nuevoMedicamento);
-				cargaGrid();
+				cargaGrid(null);
 				elementoSeleccionado = null;
 				botonAgrega.setEnabled(true);
 				botonEdita.setEnabled(false);
@@ -183,7 +184,7 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 			String nombre = elementoSeleccionado.getNombre();
 			servicioMedicamento.eliminaMedicamento(elementoSeleccionado.getId());
 			padre.refrescaDatos();
-			cargaGrid();
+			cargaGrid(null);
 			ventana.close();
 			new Notification(String.format("Entrada eliminada: <strong>\"%s\"</strong>", nombre), "",
 					Type.TRAY_NOTIFICATION, true).show(Page.getCurrent());
@@ -211,8 +212,12 @@ public class LayoutMedicamentos extends LayoutAbstracto<MedicamentoDTO> {
 	}
 
 	@Override
-	public void cargaGrid() {
-		Collection<MedicamentoDTO> elementos = servicioMedicamento.listaMedicamentos();
+	public void cargaGrid(Collection<MedicamentoDTO> elementos) {
+		if (elementos == null) {
+			textFieldFiltro.clear();
+			elementosGrid = servicioMedicamento.listaMedicamentos();
+			elementos = elementosGrid;
+		}
 		grid.setContainerDataSource(new BeanItemContainer<>(MedicamentoDTO.class, elementos));
 	}
 

@@ -71,17 +71,15 @@ public class VistaAdministracion extends VerticalLayout implements View {
 
 		// TabSheet : PRINCIPAL
 		tabSheetPrincipal = new TabSheet();
-		tabSheetPrincipal.addTab(layoutEnfermedades, PESTANNA_ENFERMEDADES);
-		tabSheetPrincipal.addTab(layoutTiposMedicamento, PESTANNA_TIPOS_MEDICAMENTO);
 		tabSheetPrincipal.addTab(layoutMedicamentos, PESTANNA_MEDICAMENTOS);
+		tabSheetPrincipal.addTab(layoutTiposMedicamento, PESTANNA_TIPOS_MEDICAMENTO);
+		tabSheetPrincipal.addTab(layoutEnfermedades, PESTANNA_ENFERMEDADES);
 		tabSheetPrincipal.addSelectedTabChangeListener(e -> {
 			if (tabSheetPrincipalBloqueado) {
 				tabSheetPrincipal.setSelectedTab(componenteActual);
 				Notification.show("No se puede cambiar de pestaña con el formulario abierto.", Type.WARNING_MESSAGE);
 			}
 		});
-		tabSheetPrincipal.setSelectedTab(layoutEnfermedades);
-		componenteActual = layoutEnfermedades;
 
 		layoutContenido.addComponent(tabSheetPrincipal);
 		return layoutContenido;
@@ -93,14 +91,14 @@ public class VistaAdministracion extends VerticalLayout implements View {
 	public void enter(ViewChangeEvent event) {
 		cargaDatos();
 	}
-	
+
 	public void cargaDatos() {
-		layoutEnfermedades.cargaGrid();
-		layoutTiposMedicamento.cargaGrid();
-		layoutMedicamentos.cargaGrid();
+		layoutEnfermedades.cargaGrid(null);
+		layoutTiposMedicamento.cargaGrid(null);
+		layoutMedicamentos.cargaGrid(null);
 		layoutMedicamentos.cargaComboBox();
 	}
-	
+
 	public void refrescaDatos() {
 		layoutEnfermedades.refrescaDatos();
 	}

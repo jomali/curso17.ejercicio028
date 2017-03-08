@@ -107,15 +107,19 @@ public class Tratamiento implements Cloneable, Identificable<Long> {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "Tratamiento [id=" + id + ", id_receta=" + receta.getId() + ", id_medicamento=" + medicamento.getId()
 				+ "]";
+	}
+	
+	@Override
+	public Tratamiento clone() {
+		Tratamiento tratamiento = new Tratamiento();
+		tratamiento.id = id;
+		tratamiento.receta = receta;
+		tratamiento.medicamento = medicamento;
+		return tratamiento;
 	}
 
 }
